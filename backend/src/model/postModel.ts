@@ -1,14 +1,26 @@
-import { InferSchemaType, Schema, model, models } from "mongoose";
+import { InferSchemaType, Schema, model } from "mongoose";
 
 const flashcardSchema = new Schema(
   {
-    title: {
-      type: String,
-      required: true,
+    front: {
+      title: {
+        type: String,
+        required: true,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
     },
-    text: {
-      type: String,
-      required: true,
+    back: {
+      title: {
+        type: String,
+        required: true,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
     },
   },
   { timestamps: true }
