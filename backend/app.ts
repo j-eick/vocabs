@@ -3,12 +3,13 @@ import Post from "./src/model/postModel";
 
 const app = express();
 
-app.get("/", async (req: Request, res: Response) => {
+app.get("/api/all", async (req: Request, res: Response) => {
   const posts = await Post.find().exec();
   console.log(posts);
 
   res.status(200).json(posts);
 });
+
 app.get("/hi", (req: Request, res: Response) => {
   res.status(200).send("Hi!!!");
 });

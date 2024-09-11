@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv/config"; // necessary to use validateEnv
 import env from "./util/validateEnv";
 import mongoose from "mongoose";
 import app from "./app";
