@@ -9,17 +9,14 @@ const flashcardSchema = new Schema(
       },
       text: {
         type: String,
-        required: true,
       },
     },
     back: {
       title: {
         type: String,
-        required: true,
       },
       text: {
         type: String,
-        required: true,
       },
     },
   },
