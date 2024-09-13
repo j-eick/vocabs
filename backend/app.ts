@@ -1,5 +1,6 @@
 import express, { Express, Request, RequestHandler, Response } from "express";
 import Flashcard from "./src/model/postModel";
+import { CC } from "./util/cliColors";
 
 const app: express.Application = express();
 
@@ -29,7 +30,7 @@ type CreateVocabBody = {
   back_text?: string;
 };
 const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unknown> = async (req, res) => {
-  console.log(`\x1b[41m New Flashcard: \x1b[0m`);
+  CC("New Flashcard", "info");
   console.log(req.body);
 
   const { front_title, front_text, back_title, back_text } = req.body;
