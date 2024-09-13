@@ -2,22 +2,21 @@ import { InferSchemaType, Schema, model } from "mongoose";
 
 const flashcardSchema = new Schema(
   {
-    front: {
-      title: {
-        type: String,
-        required: true,
-      },
-      text: {
-        type: String,
-      },
+    front_title: {
+      type: String,
+      required: true,
     },
-    back: {
-      title: {
-        type: String,
-      },
-      text: {
-        type: String,
-      },
+    front_text: {
+      type: String,
+      default: "",
+    },
+    back_title: {
+      type: String,
+      default: "",
+    },
+    back_text: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }
