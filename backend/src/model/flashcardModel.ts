@@ -1,4 +1,6 @@
-import { InferSchemaType, Schema, model } from "mongoose";
+import { InferSchemaType, Schema, model, models } from "mongoose";
+
+type Flashcard = InferSchemaType<typeof flashcardSchema>;
 
 const flashcardSchema = new Schema(
   {
@@ -21,7 +23,5 @@ const flashcardSchema = new Schema(
   },
   { timestamps: true }
 );
-
-type Flashcard = InferSchemaType<typeof flashcardSchema>;
 
 export default model<Flashcard>("Flashcard", flashcardSchema);
