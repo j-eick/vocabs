@@ -22,11 +22,12 @@
  *                  - "warn" = red background
  *                  - "info" = green background
  */
-export const CC = (input: string, type: "warn" | "info") => {
-  // text colors:
+export const CC = (input: string = "no input to log provided", type: "warn" | "info") => {
+  if (!input) {
+    throw new Error("input is undefined");
+  }
 
   let color = "";
-
   // color codes
   switch (type) {
     case "warn":
