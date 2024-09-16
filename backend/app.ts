@@ -8,18 +8,24 @@ const app: express.Application = express();
 // enable express to send json
 app.use(express.json());
 
-// get all vocabs
-app.get("/api/vocabs", async (req: Request, res: Response) => {
+/**
+ * get all vocabs
+ */
+const getAllVocabs: RequestHandler = async (req, res) => {
   const posts = await FlashcardModel.find();
   res.status(200).json(posts);
-});
+};
+app.get("/api/vocabs", getAllVocabs);
 
-// get vocab
-app.get("/api/vocabs/:vocabID", async (req: Request, res: Response) => {
+/**
+ * get vocab
+ */
+const getVocab: RequestHandler = async (req, res) => {
   const id = req.params.vocabID;
   const targetPost = await FlashcardModel.findById(id);
   res.status(200).json(targetPost);
-});
+};
+app.get("/api/vocabs/:vocabID", getVocab);
 
 /**
  * CREATE VOCAB
@@ -41,6 +47,7 @@ const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unknown> = 
   });
   res.status(200).json(newCard);
 
+  CC("New Card", "info");
   console.log(newCard);
 };
 app.post("/api/vocabs", createVocab);
@@ -54,12 +61,10 @@ type UpdateVocabBody = {
   back_title?: string;
   back_text?: string;
 };
-
 type UpdateVocabParams = {
   vocabID: string;
 };
-
-const updateVocab: RequestHandler<UpdateVocabParams, unknown, UpdateVocabBody, unknown> = async (req, res, next) => {
+const updateVocab: RequestHandler<UpdateVocabParams, unknown, UpdateVocabBody, unknown> = async (req, res) => {
   const targetID = req.params.vocabID;
   const new_front_title = req.body?.front_title;
   const new_front_text = req.body?.front_text;
@@ -94,5 +99,29 @@ const updateVocab: RequestHandler<UpdateVocabParams, unknown, UpdateVocabBody, u
   }
 };
 app.patch("/api/vocabs/:vocabID", updateVocab);
+
+/**
+ * DELETE VOCAB
+ */
+const deleteVocab: RequestHandler = async (req, res) => {
+  const targetID = req.params.vocabID;
+
+  try {
+    // check validity of flashcard id
+    if (!mongoose.isValidObjectId(targetID)) {
+      throw new Error("Invalid Flashcard ID!");
+    }
+    const targetFlashcard = await FlashcardModel.findById(targetID).exec();
+
+    if (!targetFlashcard) {
+      throw new Error("Flashcard with this ID does not exist.");
+    }
+    await FlashcardModel.findByIdAndDelete(targetID);
+    res.sendStatus(204);
+  } catch (err) {
+    console.error(err);
+  }
+};
+app.delete("/api/vocabs/:vocabID", deleteVocab);
 
 export default app;
