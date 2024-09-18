@@ -25,7 +25,6 @@ export default function App() {
     async function fetchCards() {
       const fetchedCards = await FlashcardApi.fetchFlashcards();
       setFlashcards(fetchedCards);
-      console.log(fetchedCards);
     }
     fetchCards();
   }, []);
