@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
 import { NavLink } from "react-router-dom";
+import * as FlashcardApi from "./network/flashcard_apis";
 
 type NewFlashcard = {
   front_title: string;
@@ -21,28 +22,12 @@ export default function App() {
   });
 
   useEffect(() => {
-    async function fetchData(input: RequestInfo, init?: RequestInit) {
-      const res = await fetch(input, init);
-      if (res.ok) {
-        const flashcards = await res.json();
-        console.log(flashcards);
-
-        setFlashcards(flashcards);
-
-        return res;
-      } else {
-        const errorBody = await res.json();
-        const errorMsg = errorBody.error;
-        throw Error(errorMsg);
-      }
+    async function fetchCards() {
+      const fetchedCards = await FlashcardApi.fetchFlashcards();
+      setFlashcards(fetchedCards);
+      console.log(fetchedCards);
     }
-
-    fetchData("/api/vocabs", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    fetchCards();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
