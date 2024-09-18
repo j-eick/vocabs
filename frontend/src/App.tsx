@@ -2,6 +2,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
+import { NavLink } from "react-router-dom";
 
 type NewFlashcard = {
   front_title: string;
@@ -10,7 +11,7 @@ type NewFlashcard = {
   back_text?: string;
 };
 
-function App() {
+export default function App() {
   const [flashcards, setFlashcards] = useState<FlashcardProp[]>([]);
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
@@ -85,6 +86,14 @@ function App() {
 
   return (
     <>
+      <ul className="mt-2 mb-2 flex justify-evenly">
+        <li>
+          <NavLink to="/">Study</NavLink>
+        </li>
+        <li>
+          <NavLink to="/allVocabs">My Vocabs</NavLink>
+        </li>
+      </ul>
       <ul role="list" className="border-">
         {flashcards.map((card: FlashcardProp) => (
           <li key={card._id} className="">
@@ -142,5 +151,3 @@ function App() {
     </>
   );
 }
-
-export default App;
