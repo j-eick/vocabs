@@ -71,14 +71,16 @@ export default function App() {
 
   return (
     <>
-      <ul className="mt-2 mb-2 flex justify-evenly">
-        <li>
-          <NavLink to="/">Study</NavLink>
-        </li>
-        <li>
-          <NavLink to="/allVocabs">My Vocabs</NavLink>
-        </li>
-      </ul>
+      <nav>
+        <ul className="mt-2 mb-2 flex justify-evenly">
+          <li>
+            <NavLink to="/">Study</NavLink>
+          </li>
+          <li>
+            <NavLink to="/allVocabs">My Vocabs</NavLink>
+          </li>
+        </ul>
+      </nav>
       <ul role="list" className="border-">
         {flashcards.map((card: FlashcardProp) => (
           <li key={card._id} className="">
