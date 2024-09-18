@@ -9,5 +9,8 @@ export const fetchFlashcards = async () => {
   if (!res.ok) {
     throw Error("Error while fetching flashcards");
   }
-  return res.json();
+  const result = await res.json();
+  console.log(result);
+
+  return result;
 };
