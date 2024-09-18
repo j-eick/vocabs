@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { getAllVocabs, getVocab, createVocab, updateVocab, deleteVocab } from "./src/routes/flashcardRoutes";
+import flashcardRoutes from "./src/routes/flashcardRoutes";
 
 const app: express.Application = express();
 
@@ -9,14 +9,14 @@ app.use(express.json());
 // enable express to handle cors
 app.use(cors());
 
-app.get("/api/vocabs", getAllVocabs);
+app.get("/api/vocabs", flashcardRoutes);
 
-app.get("/api/vocabs/:vocabID", getVocab);
+app.get("/api/vocabs/:vocabID", flashcardRoutes);
 
-app.post("/api/vocabs", createVocab);
+app.post("/api/vocabs", flashcardRoutes);
 
-app.patch("/api/vocabs/:vocabID", updateVocab);
+app.patch("/api/vocabs/:vocabID", flashcardRoutes);
 
-app.delete("/api/vocabs/:vocabID", deleteVocab);
+app.delete("/api/vocabs/:vocabID", flashcardRoutes);
 
 export default app;
