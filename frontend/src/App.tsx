@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
 import { NavLink } from "react-router-dom";
-import * as FlashcardApi from "./network/flashcard_apis";
+import useFetchData from "./hooks/useFetchData";
 
 type NewFlashcard = {
   front_title: string;
-  front_text?: string;
-  back_title?: string;
-  back_text?: string;
+  front_text: string;
+  back_title: string;
+  back_text: string;
 };
 
 export default function App() {
-  const [flashcards, setFlashcards] = useState<FlashcardProp[]>([]);
+  const [flashcards, setFlashcards] = useFetchData();
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
     front_text: "",
@@ -22,12 +22,8 @@ export default function App() {
   });
 
   useEffect(() => {
-    async function fetchCards() {
-      const fetchedCards = await FlashcardApi.fetchFlashcards();
-      setFlashcards(fetchedCards);
-    }
-    fetchCards();
-  }, []);
+    console.log(flashcards);
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +39,7 @@ export default function App() {
 
       if (res.ok) {
         const newCard = await res.json();
-
+        // reset input field
         setNewFlashcard({
           front_title: "",
           front_text: "",
