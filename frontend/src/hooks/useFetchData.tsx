@@ -47,10 +47,19 @@ export default function useFetchData(): UseFetchFromLSReturn {
 
     async function fetchFromDB() {
       const fetchedCards = await FlashcardApi.fetchFlashcards();
-      return fetchedCards;
+      if (Array.isArray(fetchedCards)) {
+        return fetchedCards;
+      } else {
+        throw new Error("function fetchFromDB() did not return an array.");
+      }
     }
     function fetchFromLS() {
-      return pullFromLocalStorage("myCards");
+      const data = pullFromLocalStorage("myCards");
+      if (Array.isArray(data)) {
+        return data;
+      } else {
+        throw new Error("function fetchFromLS() did not return an array.");
+      }
     }
   }, []);
 
