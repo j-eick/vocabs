@@ -6,10 +6,9 @@ export const fetchFlashcards = async (): Promise<FlashcardProp[]> => {
   });
 
   if (!res.ok) {
-    throw Error(`Error while fetching flashcards: ${res}`);
+    throw Error(`Error while fetching flashcards from DB: ${res}`);
   }
   const result = await res.json();
-  console.log(result);
 
   return result;
 };
