@@ -5,15 +5,15 @@
  * @returns
  */
 export default function isNotNEU(input: string | object[] | null | undefined): input is string {
-  if (input === null) {
-    throw new Error("Input is null");
-  }
-  if (input === undefined) {
-    throw new Error("Input is undefined");
-  }
-  if (!input.length) {
-    throw new Error("Input is empty");
-  }
+  // if (input === null) {
+  //   console.warn("Input is null");
+  // }
+  // if (input === undefined) {
+  //   console.warn("Input is undefined");
+  // }
+  // if (!input.length) {
+  //   console.warn("Input is empty");
+  // }
 
   return input !== null && input !== undefined && input !== "";
 }
