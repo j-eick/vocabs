@@ -36,6 +36,9 @@ export default function App() {
 
       if (res.ok) {
         const newCard = await res.json();
+        setFlashcards((prev) => [...prev, newCard]);
+        localStorage.removeItem("myCards");
+        localStorage.setItem("myCards", JSON.stringify(flashcards));
         // reset input field
         setNewFlashcard({
           front_title: "",
@@ -43,8 +46,6 @@ export default function App() {
           back_title: "",
           back_text: "",
         });
-        setFlashcards((prev) => [...prev, newCard]);
-        localStorage.setItem("myCards", JSON.stringify(flashcards));
       }
     } catch (err) {
       console.error(err);
