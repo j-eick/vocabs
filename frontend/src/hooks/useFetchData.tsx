@@ -13,7 +13,6 @@ export default function useFetchData(): UseFetchFromLSReturn {
     fetchFlashcards();
 
     async function fetchFlashcards() {
-      let lastDBState: FlashcardProp[] = []; // saved in localStorage
       let localStorageData: FlashcardProp[] = []; // saved in localStorage
       let mongoDbData: FlashcardProp[] = []; // saved in MongoDB
 
@@ -22,24 +21,18 @@ export default function useFetchData(): UseFetchFromLSReturn {
 
         // pull cards from LocalStorage
         const cardsFromLS = localStorage.getItem("myCards");
-        const lastSession = localStorage.getItem("lastSession");
 
-        // check if both collections exist
-        if (isNotNEU(cardsFromLS) && isNotNEU(lastSession)) {
+        // check for ls-collection "my cards"
+        if (isNotNEU(cardsFromLS)) {
           console.log("a");
-          lastDBState = JSON.parse(lastSession);
           localStorageData = JSON.parse(cardsFromLS);
+          setfetchedCards(localStorageData);
 
-          // if same length, return their data
-          if (isSameLength(lastDBState, localStorageData)) {
-            setfetchedCards(localStorageData);
-          }
           // if not, fetch from MongoDB update localStorage and return fetched data
         } else {
           console.log("b");
           const res = await FlashcardApi.fetchFlashcards();
           mongoDbData = res;
-          localStorage.setItem("lastSession", JSON.stringify(res));
           localStorage.setItem("myCards", JSON.stringify(res));
           setfetchedCards(mongoDbData);
         }
@@ -47,18 +40,6 @@ export default function useFetchData(): UseFetchFromLSReturn {
         console.error(err);
       } finally {
         setIsLoading(false);
-      }
-
-      function isSameLength(localsS: object[], mongoDB: object[]): boolean {
-        const dbDataLength = JSON.stringify(mongoDB).length;
-        const lsDataLength = JSON.stringify(localsS).length;
-        console.log("DB-Length: " + dbDataLength);
-        console.log("LS-Length: " + lsDataLength);
-        if (dbDataLength === lsDataLength) {
-          return true;
-        } else {
-          return false;
-        }
       }
     }
   }, []);
