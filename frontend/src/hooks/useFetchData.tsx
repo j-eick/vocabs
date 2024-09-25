@@ -1,42 +1,59 @@
 import { useEffect, useState } from "react";
-import pullFromLocalStorage from "../utils/pullFromLocalStorage";
 import { FlashcardProp } from "../types/flashcard";
 import * as FlashcardApi from "../network/flashcard_apis";
-import { getStringObjectArrayLength } from "../utils/getStringObjectArrayLength";
+import isNotNEU from "../utils/isNullOrEmpty";
 
-type UseFetchFromLSReturn = [FlashcardProp[], React.Dispatch<React.SetStateAction<FlashcardProp[]>>];
+type UseFetchFromLSReturn = [FlashcardProp[], React.Dispatch<React.SetStateAction<FlashcardProp[]>>, boolean];
 
 export default function useFetchData(): UseFetchFromLSReturn {
-  const [data, setData] = useState<FlashcardProp[]>([]);
+  const [fetchedCards, setfetchedCards] = useState<FlashcardProp[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchAndCompare();
+    fetchFlashcards();
 
-    async function fetchAndCompare() {
-      // fetching data from lStorage & MongoDB
-      const [localS, mongoDB] = await Promise.all([fetchFromLS(), fetchFromDB()]);
+    async function fetchFlashcards() {
+      let lastDBState: FlashcardProp[] = []; // saved in localStorage
+      let localStorageData: FlashcardProp[] = []; // saved in localStorage
+      let mongoDbData: FlashcardProp[] = []; // saved in MongoDB
 
-      // compare stringified data from localStorage & MongoDB
-      // returns true || false
-      const isSameLength = sameLength(localS, mongoDB);
+      try {
+        setIsLoading(true);
 
-      // IF NOT same length, save state of MongoDB into lStorage
-      if (!isSameLength) {
-        console.log("sending to lStorage");
-        localStorage.setItem("myCards", JSON.stringify(mongoDB));
-        setData(pullFromLocalStorage("myCards"));
-      } else {
-        console.log("Reading from lStorage");
-        setData(pullFromLocalStorage("myCards"));
+        // pull cards from LocalStorage
+        const cardsFromLS = localStorage.getItem("myCards");
+        const lastSession = localStorage.getItem("lastSession");
+
+        // check if both collections exist
+        if (isNotNEU(cardsFromLS) && isNotNEU(lastSession)) {
+          console.log("a");
+          lastDBState = JSON.parse(lastSession);
+          localStorageData = JSON.parse(cardsFromLS);
+
+          // if same length, return their data
+          if (isSameLength(lastDBState, localStorageData)) {
+            setfetchedCards(localStorageData);
+          }
+          // if not, fetch from MongoDB update localStorage and return fetched data
+        } else {
+          console.log("b");
+          const res = await FlashcardApi.fetchFlashcards();
+          mongoDbData = res;
+          localStorage.setItem("lastSession", JSON.stringify(res));
+          localStorage.setItem("myCards", JSON.stringify(res));
+          setfetchedCards(mongoDbData);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
 
-      function sameLength(localsS: object[], mongoDB: object[]) {
-        const dbDataLength = getStringObjectArrayLength(JSON.stringify(mongoDB));
-        const lsDataLength = getStringObjectArrayLength(JSON.stringify(localsS));
-
+      function isSameLength(localsS: object[], mongoDB: object[]): boolean {
+        const dbDataLength = JSON.stringify(mongoDB).length;
+        const lsDataLength = JSON.stringify(localsS).length;
         console.log("DB-Length: " + dbDataLength);
         console.log("LS-Length: " + lsDataLength);
-
         if (dbDataLength === lsDataLength) {
           return true;
         } else {
@@ -44,24 +61,7 @@ export default function useFetchData(): UseFetchFromLSReturn {
         }
       }
     }
-
-    async function fetchFromDB() {
-      const fetchedCards = await FlashcardApi.fetchFlashcards();
-      if (Array.isArray(fetchedCards)) {
-        return fetchedCards;
-      } else {
-        throw new Error("function fetchFromDB() did not return an array.");
-      }
-    }
-    function fetchFromLS() {
-      const data = pullFromLocalStorage("myCards");
-      if (Array.isArray(data)) {
-        return data;
-      } else {
-        throw new Error("function fetchFromLS() did not return an array.");
-      }
-    }
   }, []);
 
-  return [data, setData];
+  return [fetchedCards, setfetchedCards, isLoading];
 }
