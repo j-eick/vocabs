@@ -1,9 +1,10 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
 import { NavLink } from "react-router-dom";
 import useFetchData from "./hooks/useFetchData";
+import CardCaroussel from "./components/cardCaroussel/CardCaroussel";
 
 type NewFlashcard = {
   front_title: string;
@@ -13,16 +14,12 @@ type NewFlashcard = {
 };
 
 export default function App() {
-  const [flashcards, setFlashcards] = useFetchData();
+  const [flashcards, setFlashcards, loading] = useFetchData();
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
     front_text: "",
     back_title: "",
     back_text: "",
-  });
-
-  useEffect(() => {
-    console.log(flashcards);
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +44,7 @@ export default function App() {
           back_text: "",
         });
         setFlashcards((prev) => [...prev, newCard]);
-        return newCard;
+        localStorage.setItem("myCards", JSON.stringify(flashcards));
       }
     } catch (err) {
       console.error(err);
@@ -76,13 +73,19 @@ export default function App() {
           </li>
         </ul>
       </nav>
+      {loading && <p>is loading...</p>}
       <ul role="list" className="border-">
-        {flashcards.map((card: FlashcardProp) => (
-          <li key={card._id} className="">
-            <Flashcard flashcard={card} />
-          </li>
-        ))}
+        {flashcards.length >= 1 ? (
+          flashcards.map((card: FlashcardProp) => (
+            <li key={card._id} className="">
+              <Flashcard flashcard={card} />
+            </li>
+          ))
+        ) : (
+          <p>Could nto retrieve your list of vocabularies.</p>
+        )}
       </ul>
+      <CardCaroussel flashcards={flashcards} />
       <form
         onSubmit={(e) => handleSubmit(e)}
         action="/api/vocabs"
