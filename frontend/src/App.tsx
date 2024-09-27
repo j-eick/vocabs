@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
 import { NavLink } from "react-router-dom";
@@ -37,7 +37,6 @@ export default function App() {
       if (res.ok) {
         const newCard = await res.json();
         setFlashcards((prev) => [...prev, newCard]);
-        localStorage.removeItem("myCards");
         localStorage.setItem("myCards", JSON.stringify(flashcards));
         // reset input field
         setNewFlashcard({
