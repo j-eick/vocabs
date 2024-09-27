@@ -15,5 +15,5 @@ export default function isNotNEU(input: string | object[] | null | undefined): i
   //   console.warn("Input is empty");
   // }
 
-  return input !== null && input !== undefined && input !== "";
+  return input !== null && input !== undefined && input !== "" && !input.length;
 }
