@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import useFlashcardsStore from "../store/flashcardStore";
 import { useEffect } from "react";
 import ListItem from "../components/ui/list-item-allVocabs/ListItem";
