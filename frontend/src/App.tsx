@@ -1,11 +1,8 @@
 import "./App.css";
 import { useState } from "react";
-import { Flashcard } from "./components/flashcard";
-import { FlashcardProp } from "./types/flashcard";
-import { NavLink } from "react-router-dom";
-import useFetchData from "./hooks/useFetchData";
-import CardCaroussel from "./components/cardCaroussel/CardCaroussel";
 import useFlashcardsStore from "./store/flashcardStore";
+import Header from "./components/ui/header/header";
+import { FlashcardProp } from "./types/flashcard";
 
 type NewFlashcard = {
   front_title: string;
@@ -17,7 +14,6 @@ type NewFlashcard = {
 export default function App() {
   const addToFlashcardStore = useFlashcardsStore((state) => state.addToFlashcardStore);
   const allFlashcards = useFlashcardsStore((state) => state.allFlashcards);
-  const [loading] = useFetchData();
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
     front_text: "",
@@ -64,77 +60,80 @@ export default function App() {
   };
 
   return (
-    <>
-      <nav>
-        <ul className="mt-2 mb-2 flex justify-evenly">
-          <li>
-            <NavLink to="/">Study</NavLink>
-          </li>
-          <li>
-            <NavLink to="/allVocabs">My Vocabs</NavLink>
-          </li>
-        </ul>
-      </nav>
-      {loading && <p>is loading...</p>}
-      <ul role="list" className="border-">
-        {allFlashcards.length >= 1 ? (
-          allFlashcards.map((card: FlashcardProp) => (
-            <li key={card._id} className="">
-              <Flashcard flashcard={card} />
-            </li>
-          ))
-        ) : (
-          <p>Could nto retrieve your list of vocabularies.</p>
-        )}
-      </ul>
-      <CardCaroussel flashcards={allFlashcards} />
-      <form
-        onSubmit={(e) => handleSubmit(e)}
-        action="/api/vocabs"
-        method="post"
-        name="create flashcard"
-        className="mt-4 flex flex-col"
-      >
-        <label htmlFor="frontTitle">Front Title</label>
-        <input
-          id="frontTitle"
-          type="text"
-          name="front_title"
-          value={newFlashcard.front_title}
-          onChange={(e) => inputFieldHandler(e)}
-          className="border-2"
-        />
-        <label htmlFor="frontDescription">Front Description </label>
-        <input
-          id="frontDescription"
-          type="text"
-          name="front_text"
-          value={newFlashcard.front_text}
-          onChange={(e) => inputFieldHandler(e)}
-          className="border-2"
-        />
-        <label htmlFor="backTitle">Back Title</label>
-        <input
-          id="backTitle"
-          type="text"
-          name="back_title"
-          value={newFlashcard.back_title}
-          onChange={(e) => inputFieldHandler(e)}
-          className="border-2"
-        />
-        <label htmlFor="backDescription">Back Description</label>
-        <input
-          id="backDescription"
-          type="text"
-          name="back_text"
-          value={newFlashcard.back_text}
-          onChange={(e) => inputFieldHandler(e)}
-          className="border-2"
-        />
-        <button type="submit" className="bg-slate-300 mt-4 p-2 cursor-pointer">
-          Create Vocab
-        </button>
-      </form>
-    </>
+    <main className="w-screen h-screen">
+      <Header />
+      <section className="w-5/6 mx-auto my-0 mt-5">
+        <LatestVocab flashcards={allFlashcards} />
+      </section>
+      <section className="w-5/6 mx-auto my-0">
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          action="/api/vocabs"
+          method="post"
+          name="create flashcard"
+          className="mt-4 flex flex-col"
+        >
+          <label htmlFor="frontTitle">Front Title</label>
+          <input
+            id="frontTitle"
+            type="text"
+            name="front_title"
+            value={newFlashcard.front_title}
+            onChange={(e) => inputFieldHandler(e)}
+            className="border-2"
+          />
+          <label htmlFor="frontDescription">Front Description </label>
+          <input
+            id="frontDescription"
+            type="text"
+            name="front_text"
+            value={newFlashcard.front_text}
+            onChange={(e) => inputFieldHandler(e)}
+            className="border-2"
+          />
+          <label htmlFor="backTitle">Back Title</label>
+          <input
+            id="backTitle"
+            type="text"
+            name="back_title"
+            value={newFlashcard.back_title}
+            onChange={(e) => inputFieldHandler(e)}
+            className="border-2"
+          />
+          <label htmlFor="backDescription">Back Description</label>
+          <input
+            id="backDescription"
+            type="text"
+            name="back_text"
+            value={newFlashcard.back_text}
+            onChange={(e) => inputFieldHandler(e)}
+            className="border-2"
+          />
+          <button type="submit" className="bg-slate-300 mt-4 p-2 cursor-pointer">
+            Create Vocab
+          </button>
+        </form>
+      </section>
+    </main>
   );
+
+  type LatestVocabProps = {
+    flashcards: FlashcardProp[];
+  };
+  //TODO: turn this into a caroussel.
+  function LatestVocab({ flashcards }: LatestVocabProps) {
+    // grabbing last 3 indexes of allFlashcard-array
+    const lastThreeEntries = flashcards.slice(flashcards.length - 3, flashcards.length);
+
+    return (
+      <div className="mx-auto my-0 text-left border-2">
+        <p>last 3 entries</p>
+        <ul role="list" className="border border-slate-600">
+          {lastThreeEntries.map((entry) => (
+            <li>{entry.front_title}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 }
