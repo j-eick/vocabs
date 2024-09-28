@@ -1,10 +1,11 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flashcard } from "./components/flashcard";
 import { FlashcardProp } from "./types/flashcard";
 import { NavLink } from "react-router-dom";
 import useFetchData from "./hooks/useFetchData";
 import CardCaroussel from "./components/cardCaroussel/CardCaroussel";
+import useFlashcardsStore from "./store/flashcardStore";
 
 type NewFlashcard = {
   front_title: string;
@@ -14,7 +15,9 @@ type NewFlashcard = {
 };
 
 export default function App() {
-  const [flashcards, setFlashcards, loading] = useFetchData();
+  const addToFlashcardStore = useFlashcardsStore((state) => state.addToFlashcardStore);
+  const allFlashcards = useFlashcardsStore((state) => state.allFlashcards);
+  const [loading] = useFetchData();
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
     front_text: "",
@@ -36,8 +39,7 @@ export default function App() {
 
       if (res.ok) {
         const newCard = await res.json();
-        setFlashcards((prev) => [...prev, newCard]);
-        localStorage.setItem("myCards", JSON.stringify(flashcards));
+        addToFlashcardStore(newCard);
         // reset input field
         setNewFlashcard({
           front_title: "",
@@ -75,8 +77,8 @@ export default function App() {
       </nav>
       {loading && <p>is loading...</p>}
       <ul role="list" className="border-">
-        {flashcards.length >= 1 ? (
-          flashcards.map((card: FlashcardProp) => (
+        {allFlashcards.length >= 1 ? (
+          allFlashcards.map((card: FlashcardProp) => (
             <li key={card._id} className="">
               <Flashcard flashcard={card} />
             </li>
@@ -85,7 +87,7 @@ export default function App() {
           <p>Could nto retrieve your list of vocabularies.</p>
         )}
       </ul>
-      <CardCaroussel flashcards={flashcards} />
+      <CardCaroussel flashcards={allFlashcards} />
       <form
         onSubmit={(e) => handleSubmit(e)}
         action="/api/vocabs"
