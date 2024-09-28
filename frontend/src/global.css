@@ -13,9 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
 }
 
@@ -29,8 +36,4 @@ body {
 
 [role="list"] {
   list-style: none;
-}
-
-li {
-  border: 1px solid grey;
 }
