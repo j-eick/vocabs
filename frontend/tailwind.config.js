@@ -2,7 +2,16 @@
 export default {
   content: ["./index.html", "./src/**/*.{html,js,ts,tsx,jsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backdropBrightness: {
+        25: ".25",
+        80: ".8",
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    // themes: ["light", "dark", "cupcake"],
+    themes: false,
+  },
 };
