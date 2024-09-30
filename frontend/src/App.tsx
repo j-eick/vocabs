@@ -1,8 +1,10 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFlashcardsStore from "./store/flashcardStore";
-import Header from "./components/ui/header/header";
+import Header from "./components/ui/header/Header";
 import { FlashcardProp } from "./types/flashcard";
+import Modal_blurredBg from "./components/ui/modal/Modal_blurredBg";
+import CreateNewVocab from "./components/ui/form/CreateNewVocab";
 
 type NewFlashcard = {
   front_title: string;
@@ -21,8 +23,13 @@ export default function App() {
     back_text: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // const formData = new FormData(e.currentTarget);
+    // const formObj = Object.fromEntries(formData.entries());
+
+    // console.log(formObj);
 
     try {
       const res = await fetch("http://localhost:3000/api/vocabs", {
@@ -56,12 +63,18 @@ export default function App() {
       ...prev,
       [name]: value,
     }));
-    console.log(newFlashcard);
   };
 
+  useEffect(() => {
+    console.log(newFlashcard);
+  });
+
   return (
-    <main className="w-screen h-screen">
+    <main className="relative w-screen h-screen">
       <Header />
+      <Modal_blurredBg>
+        <CreateNewVocab />
+      </Modal_blurredBg>
       <section className="w-5/6 mx-auto my-0 mt-5">
         <LatestVocab flashcards={allFlashcards} />
       </section>
@@ -130,7 +143,7 @@ export default function App() {
         <p>last 3 entries</p>
         <ul role="list" className="border border-slate-600">
           {lastThreeEntries.map((entry) => (
-            <li>{entry.front_title}</li>
+            <li key={entry._id}>{entry.front_title}</li>
           ))}
         </ul>
       </div>
