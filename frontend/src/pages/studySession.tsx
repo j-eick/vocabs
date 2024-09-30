@@ -1,5 +1,5 @@
 import CardCaroussel from "../components/cardCaroussel/CardCaroussel";
-import Header from "../components/ui/header/header";
+import Header from "../components/ui/header/Header";
 import useFlashcardsStore from "../store/flashcardStore";
 
 export default function StudySession() {
