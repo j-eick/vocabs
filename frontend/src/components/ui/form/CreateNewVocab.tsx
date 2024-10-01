@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import useFlashcardsStore from "../../../store/flashcardStore";
 import { useClickOutside } from "../../../utils/clickOutside";
+import useButtonStore from "../../../store/buttonStore";
+import useModalStore from "../../../store/modalStore";
 
 type NewFlashcard = {
   front_title: string;
@@ -13,7 +15,10 @@ type CreateNewVocab = {
   onClickOutside: () => void;
 };
 
+// INFO: Add Pending STate while flashcard is being created
 export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
+  const showNewVocabButton = useButtonStore((state) => state.ShowNewVocabButton);
+  const showModal = useModalStore((state) => state.ShowNewVocabModal);
   const addToFlashcardStore = useFlashcardsStore((state) => state.addToFlashcardStore);
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     front_title: "",
@@ -53,6 +58,9 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
           back_text: "",
         });
       }
+
+      showModal(false);
+      showNewVocabButton(true);
     } catch (err) {
       console.error(err);
     }
