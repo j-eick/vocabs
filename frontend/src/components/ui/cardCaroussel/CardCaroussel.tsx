@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlashcardProp } from "../../types/flashcard";
+import { FlashcardProp } from "../../../types/flashcard";
 
 type CardCarousselProps = {
   flashcards: FlashcardProp[];

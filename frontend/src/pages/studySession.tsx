@@ -1,4 +1,4 @@
-import CardCaroussel from "../components/cardCaroussel/CardCaroussel";
+import CardCaroussel from "../components/ui/cardCaroussel/CardCaroussel";
 import Header from "../components/ui/header/Header";
 import useFlashcardsStore from "../store/flashcardStore";
 
