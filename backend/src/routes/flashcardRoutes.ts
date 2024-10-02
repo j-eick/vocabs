@@ -112,7 +112,10 @@ export const deleteVocab: RequestHandler = async (req, res) => {
       throw new Error("Flashcard with this ID does not exist.");
     }
     await FlashcardModel.findByIdAndDelete(targetID);
+
     res.sendStatus(204);
+    CC("Removed Card", "warn");
+    console.log(`${targetID}`);
   } catch (err) {
     console.error(err);
   }

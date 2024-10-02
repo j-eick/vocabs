@@ -10,18 +10,22 @@ export default function CardCaroussel({ flashcards }: CardCarousselProps) {
   if (!flashcards || !flashcards.length) {
     return <p>Flashcard couldn't be retrieved.</p>;
   }
-  const { front_title, front_text, back_title, back_text } = flashcards[index];
+  const { front_title, front_text, back_title, back_text, createdAt, updatedAt } = flashcards[index];
 
   function handleClick() {
     setIndex((prev) => (prev + 1) % flashcards.length);
   }
 
+  // INFO: Flashcard Variants: (1) Space only for question (2) Indicates length of answer
   return (
     <>
       {!flashcards.length || !flashcards ? (
         "Flashcard could not be retrieved."
       ) : (
-        <div className="bg-slate-300">
+        <div
+          className={`min-h-40 py-3
+                      shadow-line rounded-lg`}
+        >
           <h1>{front_title}</h1>
           <p>{front_text}</p>
           <h1>{back_title}</h1>
