@@ -12,7 +12,8 @@ export default function AllVocabsPage() {
     if (allFlashcards) {
       console.log(allFlashcards);
     }
-  }, []);
+  });
+
   return (
     <main className="relative w-full min-h-dvh border-4 border-slate-400">
       <Header />
@@ -22,7 +23,12 @@ export default function AllVocabsPage() {
         {allFlashcards.length >= 1 ? (
           allFlashcards.map((card) => <ListItem key={card._id} flashcard={card} />)
         ) : (
-          <p>Could nto retrieve your list of vocabularies.</p>
+          <>
+            <p className="mb-10">
+              You don't have one single flashcard yet. Work up! <br /> <br /> Head over to Dashboard and create your
+              first flashcard.
+            </p>
+          </>
         )}
       </ul>
       {/* 
