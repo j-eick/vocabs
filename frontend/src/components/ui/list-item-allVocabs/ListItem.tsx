@@ -1,5 +1,7 @@
 import { FlashcardProp } from "../../../types/flashcard";
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import * as FlashcardApi from "../../../network/flashcard_apis";
+import useFlashcardsStore from "../../../store/flashcardStore";
 
 type ListItemProp = {
   flashcard: FlashcardProp;
@@ -7,17 +9,33 @@ type ListItemProp = {
 
 export default function ListItem({ flashcard }: ListItemProp) {
   const { front_title, back_title } = flashcard;
+  const removeFromStore = useFlashcardsStore((state) => state.removeFlashcardStore);
 
-  const removeVocabHandler = () => {};
+  const deleteFlashcard = async (flashcard: FlashcardProp) => {
+    const id = flashcard._id;
+
+    try {
+      await FlashcardApi.deleteFlashcard(id);
+      removeFromStore(id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <div className="relative">
+    <>
       <li className={`relative w-full h-8 grid grid-cols-12 gap-y-3 items-center`}>
         <p className="col-span-4 ">{front_title}</p>
         <p className="col-span-7">{back_title}</p>
-        <MdOutlineDeleteOutline className="col-span-1 cursor-pointer" onClick={removeVocabHandler} />
+        <MdOutlineDeleteOutline
+          className="col-span-1 cursor-pointer"
+          onClick={(e) => {
+            deleteFlashcard(flashcard);
+            e.stopPropagation();
+          }}
+        />
       </li>
       <div className="absolute border-b w-full" />
-    </div>
+    </>
   );
 }
