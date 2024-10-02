@@ -1,4 +1,3 @@
-import "./App.css";
 import useFlashcardsStore from "./store/flashcardStore";
 import Header from "./components/ui/header/Header";
 import { FlashcardProp } from "./types/flashcard";

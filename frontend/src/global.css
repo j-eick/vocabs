@@ -21,19 +21,31 @@
   padding: 0;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  min-width: 320px;
+}
+
+#root {
+  max-width: 1280px;
+  text-align: center;
+}
+
 a {
   font-weight: 500;
   text-decoration: inherit;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 [role="list"] {
   list-style: none;
+}
+
+button {
+  outline: none;
+  border: none;
 }

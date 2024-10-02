@@ -6,7 +6,7 @@ export default function StudySession() {
   const allFlashcards = useFlashcardsStore((state) => state.allFlashcards);
 
   return (
-    <main className="w-dvw h-screen">
+    <main className="w-dvw h-screen border-4 border-slate-400">
       <Header />
       <div className="w-5/6 mx-auto my-0">
         <CardCaroussel flashcards={allFlashcards} />
