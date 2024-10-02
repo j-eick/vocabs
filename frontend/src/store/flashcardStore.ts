@@ -11,6 +11,7 @@ type State = {
 type Actions = {
   saveToFlashcardStore: (flashcards: FlashcardProp[]) => void;
   addToFlashcardStore: (flashcards: FlashcardProp) => void;
+  removeFlashcardStore: (flashcards: string) => void;
 };
 
 const useFlashcardsStore = create<State & Actions>()(
@@ -25,10 +26,15 @@ const useFlashcardsStore = create<State & Actions>()(
           allFlashcards: cards,
         })),
 
-      // save to flashcardStore
+      // ADD flashcard to store
       addToFlashcardStore: (cards) =>
         set((state) => ({
           allFlashcards: [...state.allFlashcards, cards],
+        })),
+
+      removeFlashcardStore: (idToRemove) =>
+        set((state) => ({
+          allFlashcards: state.allFlashcards.filter((card) => card._id !== idToRemove),
         })),
 
       // fetch from MongoDB
