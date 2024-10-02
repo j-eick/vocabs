@@ -3,8 +3,9 @@ import useFlashcardsStore from "../../../store/flashcardStore";
 import { useClickOutside } from "../../../utils/clickOutside";
 import useButtonStore from "../../../store/buttonStore";
 import useModalStore from "../../../store/modalStore";
+import * as FlashcardAPI from "../../../network/flashcard_apis";
 
-type NewFlashcard = {
+export type NewFlashcard = {
   front_title: string;
   front_text: string;
   back_title: string;
@@ -39,17 +40,10 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
     // console.log(formObj);
 
     try {
-      const res = await fetch("http://localhost:3000/api/vocabs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newFlashcard),
-      });
+      const res = await FlashcardAPI.createFlashcard(newFlashcard);
 
-      if (res.ok) {
-        const newCard = await res.json();
-        addToFlashcardStore(newCard);
+      if (res) {
+        addToFlashcardStore(res);
         // reset input field
         setNewFlashcard({
           front_title: "",
