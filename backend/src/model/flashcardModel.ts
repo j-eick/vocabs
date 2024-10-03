@@ -1,4 +1,4 @@
-import { InferSchemaType, Schema, model, models } from "mongoose";
+import mongoose, { InferSchemaType, Schema, model, models } from "mongoose";
 
 type Flashcard = InferSchemaType<typeof flashcardSchema>;
 
