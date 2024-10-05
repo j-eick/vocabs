@@ -3,15 +3,19 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { FlashcardProp } from "../types/flashcard";
 import { persist } from "zustand/middleware";
+import { StackProp } from "../types/stack";
 
 type State = {
   allFlashcards: FlashcardProp[];
+  allStacksWithCards: StackProp[];
 };
 
 type Actions = {
   saveToFlashcardStore: (flashcards: FlashcardProp[]) => void;
   addToFlashcardStore: (flashcards: FlashcardProp) => void;
   removeFlashcardStore: (flashcards: string) => void;
+
+  saveToAllStacksWithCards: (stacksAndCards) => void;
 };
 
 const useFlashcardsStore = create<State & Actions>()(
@@ -19,6 +23,7 @@ const useFlashcardsStore = create<State & Actions>()(
     immer((set) => ({
       // all flashcards
       allFlashcards: [],
+      allStacksWithCards: [],
 
       // save to flashcardStore
       saveToFlashcardStore: (cards) =>
@@ -35,6 +40,11 @@ const useFlashcardsStore = create<State & Actions>()(
       removeFlashcardStore: (idToRemove) =>
         set((state) => ({
           allFlashcards: state.allFlashcards.filter((card) => card._id !== idToRemove),
+        })),
+
+      saveToAllStacksWithCards: (stacksAndCards) =>
+        set(() => ({
+          allStacksWithCards: stacksAndCards,
         })),
 
       // fetch from MongoDB
