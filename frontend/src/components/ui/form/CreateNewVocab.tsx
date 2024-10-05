@@ -10,6 +10,7 @@ export type NewFlashcard = {
   front_text: string;
   back_title: string;
   back_text: string;
+  stackID: "";
 };
 
 type CreateNewVocab = {
@@ -26,6 +27,7 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
     front_text: "",
     back_title: "",
     back_text: "",
+    stackID: "",
   });
 
   const ref = useRef<HTMLDivElement>(null);
@@ -50,6 +52,7 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
           front_text: "",
           back_title: "",
           back_text: "",
+          stackID: "",
         });
       }
 
