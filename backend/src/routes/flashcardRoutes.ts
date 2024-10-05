@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import FlashcardModel from "../model/flashcardModel";
+import StackModel from "../model/stackModel";
 import { CC } from "../../util/cliColors";
 import mongoose from "mongoose";
 
@@ -24,25 +25,54 @@ export const getVocab: RequestHandler = async (req, res) => {
  * CREATE VOCAB
  */
 type CreateVocabBody = {
-  front_title?: string;
-  front_text?: string;
-  back_title?: string;
-  back_text?: string;
+  front_title: string;
+  front_text: string;
+  back_title: string;
+  back_text: string;
+  stackID?: string;
 };
 export const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unknown> = async (req, res) => {
-  const { front_title, front_text, back_title, back_text } = req.body;
-  console.log(front_title);
+  try {
+    const { front_title, front_text, back_title, back_text, stackID } = req.body;
+    console.log(front_title);
+    console.log(stackID);
 
-  const newCard = await FlashcardModel.create({
-    front_title,
-    front_text,
-    back_title,
-    back_text,
-  });
-  res.status(200).json(newCard);
+    let stack;
 
-  CC("New Card", "info");
-  console.log(newCard);
+    if (!stackID) {
+      stack = await StackModel.create({
+        name: "new stack",
+        description: "enter description",
+        flashcards: [],
+      });
+    } else {
+      stack = await StackModel.findById(stackID);
+
+      if (!stack) {
+        return res.status(404).json({ message: "Stack not found" });
+      }
+    }
+
+    const newCard = await FlashcardModel.create({
+      front_title,
+      front_text,
+      back_title,
+      back_text,
+      stack: stack._id,
+    });
+
+    // add flashcards to the stack's flashcard array
+    stack.flashcards.push(newCard._id);
+    await stack.save();
+
+    res.status(200).json(newCard);
+
+    CC("New Card", "info");
+    console.log(newCard);
+  } catch (error) {
+    console.error("Error creating flashcard or stack:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 /**
