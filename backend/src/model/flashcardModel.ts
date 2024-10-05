@@ -20,6 +20,7 @@ const flashcardSchema = new Schema(
       type: String,
       default: "",
     },
+    stack: { type: Schema.Types.ObjectId, ref: "Stack", required: true },
   },
   { timestamps: true }
 );
