@@ -14,9 +14,9 @@ export default function useFetchData(): UseFetchFromLSReturn {
   const savetoStore_allStackswithCards = useFlashcardsStore((state) => state.saveToAllStacksWithCards);
 
   useEffect(() => {
-    if (!allflashcards.length) {
-      fetchFlashcards();
-    }
+    console.log(allflashcards);
+
+    fetchFlashcards();
 
     async function fetchFlashcards() {
       try {

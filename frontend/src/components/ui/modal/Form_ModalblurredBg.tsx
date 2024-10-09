@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import CreateNewVocab from "../form/CreateNewVocab";
 
 type ModalProps = {
@@ -7,10 +6,6 @@ type ModalProps = {
 };
 
 export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps) {
-  useEffect(() => {
-    console.log(show);
-  });
-
   return (
     show && (
       <div

@@ -34,8 +34,6 @@ type CreateVocabBody = {
 export const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unknown> = async (req, res) => {
   try {
     const { front_title, front_text, back_title, back_text, stackID } = req.body;
-    console.log(front_title);
-    console.log(stackID);
 
     let stack;
 
