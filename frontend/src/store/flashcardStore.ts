@@ -15,7 +15,7 @@ type Actions = {
   addToFlashcardStore: (flashcards: FlashcardProp) => void;
   removeFlashcardStore: (flashcards: string) => void;
   saveToAllStacksWithCards: (stacksAndCards: StackProp[]) => void;
-  removeStack: (stackID: string) => void;
+  removeStack: (stackIDtoRemove: string) => void;
 };
 
 const useFlashcardsStore = create<State & Actions>()(

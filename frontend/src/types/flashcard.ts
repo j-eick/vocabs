@@ -6,4 +6,5 @@ export type FlashcardProp = {
   back_text?: string;
   createdAt?: string;
   updatedAt?: string;
+  stack: string;
 };
