@@ -5,7 +5,7 @@ import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
 import useButtonStore from "./store/buttonStore";
 import useModalStore from "./store/modalStore";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { useEffect } from "react";
+import { useState } from "react";
 import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
 
@@ -16,21 +16,24 @@ export default function App() {
   const showDialogModal = useModalStore((state) => state.ShowNewVocabModal);
   const allStacksWithCards = useFlashcardsStore((state) => state.allStacksWithCards);
   const removeStack = useFlashcardsStore((state) => state.removeStack);
+  const [showAskDelete, setShowAskDelete] = useState(false);
 
-  const handleDeleteStack = async (stack: StackProp) => {
+  const handleAskDeleteStack = (stack: StackProp) => {
+    console.log(stack._id);
+    setShowAskDelete(true);
+  };
+
+  const handleConfirmDelete = async (stack: StackProp) => {
     console.log(stack._id);
 
     try {
-      await StackAPI.deleteStack(stack._id);
+      await StackAPI.deleteStackWithCards(stack._id, true);
       removeStack(stack._id);
+      setShowAskDelete(false);
     } catch (error) {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    console.log(allStacksWithCards);
-  });
 
   return (
     <main className="relative w-screen h-screen">
@@ -42,29 +45,49 @@ export default function App() {
       {allStacksWithCards && (
         <ul>
           {allStacksWithCards.map((stack, i) => (
-            <li key={i} className="border-2">
+            <li key={i} className="border-2 relative">
               <p className="flex justify-evenly ">
                 {stack.name}{" "}
                 <MdOutlineDeleteOutline
                   onClick={(e) => {
-                    handleDeleteStack(stack);
+                    handleAskDeleteStack(stack);
                     e.stopPropagation();
                   }}
                 />
               </p>
+              {showAskDelete && (
+                <div className="flex-col bg-red-300">
+                  <span>
+                    Are you sure? <br /> <span className="text-xs">(Stack incl. all its cards will be deleted.)</span>
+                  </span>
+                  <div className="flex gap-1 justify-center">
+                    <button
+                      className="border"
+                      onClick={(e) => {
+                        handleConfirmDelete(stack);
+                        e.stopPropagation();
+                      }}
+                    >
+                      yes
+                    </button>
+                    <button
+                      className="border"
+                      onClick={(e) => {
+                        setShowAskDelete(false);
+                        e.stopPropagation();
+                      }}
+                    >
+                      no
+                    </button>
+                  </div>
+                </div>
+              )}
               <p>{`Number of flashcards: ${stack.flashcards.length}`}</p>
             </li>
           ))}
         </ul>
       )}
       <FormModal_blurredBg show={State_ModalNewVocabForm} onClickOutside={() => showDialogModal(false)} />
-      <button
-        onClick={() => {
-          localStorage.removeItem("myCards");
-        }}
-      >
-        clear{" "}
-      </button>
       {/* BUTTON: CREATE NEW VOCAB */}
       {newVocabButton.NewVocabButton_State && (
         <button
