@@ -7,14 +7,12 @@ import * as FlashcardAPI from "../../../network/flashcard_apis";
 import Dropdown from "../dropdown-menu/Dropdown";
 
 export type NewFlashcard = {
+  _id: string;
   front_title: string;
   front_text: string;
   back_title: string;
   back_text: string;
-  stack: {
-    id: string;
-    name: string;
-  };
+  stack: "";
 };
 
 type CreateNewVocab = {
@@ -27,14 +25,12 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
   const showModal = useModalStore((state) => state.ShowNewVocabModal);
   const addToFlashcardStore = useFlashcardsStore((state) => state.addToFlashcardStore);
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
+    _id: "",
     front_title: "",
     front_text: "",
     back_title: "",
     back_text: "",
-    stack: {
-      id: "",
-      name: "",
-    },
+    stack: "",
   });
 
   const ref = useRef<HTMLDivElement>(null);
@@ -50,14 +46,12 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
         addToFlashcardStore(res);
         // reset input field
         setNewFlashcard({
+          _id: "",
           front_title: "",
           front_text: "",
           back_title: "",
           back_text: "",
-          stack: {
-            id: "",
-            name: "",
-          },
+          stack: "",
         });
       }
 
