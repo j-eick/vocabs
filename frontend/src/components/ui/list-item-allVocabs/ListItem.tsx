@@ -8,8 +8,18 @@ type ListItemProp = {
 };
 
 export default function ListItem({ flashcard }: ListItemProp) {
-  const { front_title, back_title } = flashcard;
+  const { front_title, back_title, _id, stack } = flashcard;
   const removeFromStore = useFlashcardsStore((state) => state.removeFlashcardStore);
+
+  console.log(stack);
+
+  const cardID = (_id) => {
+    const result = _id.slice(_id.length - 3);
+    return result;
+  };
+  const stackID = (stack: string) => {
+    return stack.slice(stack.length - 3);
+  };
 
   const handleDeleteFlashcard = async (flashcard: FlashcardProp) => {
     const id = flashcard._id;
@@ -25,8 +35,10 @@ export default function ListItem({ flashcard }: ListItemProp) {
   return (
     <>
       <li className={`relative w-full h-8 grid grid-cols-12 gap-y-3 items-center`}>
-        <p className="col-span-4 ">{front_title}</p>
-        <p className="col-span-7">{back_title}</p>
+        <p className="col-span-4 flex-row">{front_title}</p>
+        <p className="col-span-3 flex-row text-xs">{`ID: ${cardID(_id)}`}</p>
+        <p className="col-span-4 text-xs">{`Stack: ${stackID(stack)}`}</p>
+        {/* <p className="col-span-4">{back_title}</p> */}
         <MdOutlineDeleteOutline
           className="col-span-1 cursor-pointer"
           onClick={(e) => {
