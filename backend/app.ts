@@ -33,6 +33,6 @@ app.get("/api/stacks", getStacks);
 
 // app.patch("/api/stacks/:stackID", updateStack);
 
-app.delete("/api/stack/:stackID", deleteStack);
+app.delete("/api/stacks/:stackID", deleteStack);
 
 export default app;

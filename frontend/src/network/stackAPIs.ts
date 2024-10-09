@@ -14,6 +14,7 @@ export async function fetchAllStacks() {
   }
 }
 
+// TODO: createStack needs to be passed the newStack; need to create stack via form/dropdown
 export async function createStack() {
   let res;
 
@@ -38,11 +39,22 @@ export async function createStack() {
 
 /**
  * DELETE CARD
- * @param id
+ * @param stackID
  * @returns updated JSON
  */
-export const deleteStack = async (id: string) => {
-  await fetch(`/api/stack/${id}`, {
+export const deleteStack = async (stackID: string) => {
+  await fetch(`/api/stacks/${stackID}`, {
+    method: "DELETE",
+  });
+};
+
+/**
+ * DELETE CARD
+ * @param stackID
+ * @returns updated JSON
+ */
+export const deleteStackWithCards = async (stackID: string, inclCards: boolean) => {
+  await fetch(`/api/stacks/${stackID}?withCards=${inclCards}`, {
     method: "DELETE",
   });
 };

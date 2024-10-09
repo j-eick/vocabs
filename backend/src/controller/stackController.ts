@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import StackModel from "../model/stackModel";
 import mongoose from "mongoose";
 import { CC } from "../../util/cliColors";
+import FlashcardModel from "../model/flashcardModel";
 
 /**
  * CREATE NEW STACK
@@ -60,7 +61,9 @@ export const getStacks: RequestHandler = async (req, res) => {
  */
 export const deleteStack: RequestHandler = async (req, res) => {
   const targetID = req.params.stackID;
+  const withCards = req.query.withCards;
   console.log(targetID);
+  console.log(withCards);
 
   try {
     // check validity of flashcard id
@@ -72,7 +75,15 @@ export const deleteStack: RequestHandler = async (req, res) => {
     if (!targetStack) {
       throw new Error("Stack with this ID does not exist.");
     }
-    await StackModel.findByIdAndDelete(targetID);
+
+    if (withCards === "true") {
+      // DELETE STACK INCL. CARDS
+      await FlashcardModel.deleteMany({ stack: targetID });
+      await StackModel.findByIdAndDelete(targetID);
+    } else {
+      // DELETE STACK w/o CARDS
+      await StackModel.findByIdAndDelete(targetID);
+    }
 
     res.sendStatus(204);
     CC("Removed Stack", "warn");
