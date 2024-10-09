@@ -4,13 +4,17 @@ import { useClickOutside } from "../../../utils/clickOutside";
 import useButtonStore from "../../../store/buttonStore";
 import useModalStore from "../../../store/modalStore";
 import * as FlashcardAPI from "../../../network/flashcard_apis";
+import Dropdown from "../dropdown-menu/Dropdown";
 
 export type NewFlashcard = {
   front_title: string;
   front_text: string;
   back_title: string;
   back_text: string;
-  stackID: "";
+  stack: {
+    id: string;
+    name: string;
+  };
 };
 
 type CreateNewVocab = {
@@ -27,7 +31,10 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
     front_text: "",
     back_title: "",
     back_text: "",
-    stackID: "",
+    stack: {
+      id: "",
+      name: "",
+    },
   });
 
   const ref = useRef<HTMLDivElement>(null);
@@ -35,11 +42,6 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // const formData = new FormData(e.currentTarget);
-    // const formObj = Object.fromEntries(formData.entries());
-
-    // console.log(formObj);
 
     try {
       const res = await FlashcardAPI.createFlashcard(newFlashcard);
@@ -52,10 +54,14 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
           front_text: "",
           back_title: "",
           back_text: "",
-          stackID: "",
+          stack: {
+            id: "",
+            name: "",
+          },
         });
       }
 
+      // HIDE modal && SHOW add-vocab-button
       showModal(false);
       showNewVocabButton(true);
     } catch (err) {
@@ -74,6 +80,12 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
 
   return (
     <div ref={ref}>
+      {/* <Dropdown
+          listItems={allStacksWithCards}
+          onChange={handleDropdownChange}
+          dropDownValue={stackDropDownValue}
+          label="Save to stack:"
+        /> */}
       <form
         onSubmit={(e) => handleSubmit(e)}
         action="/api/vocabs"

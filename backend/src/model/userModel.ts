@@ -1,6 +1,6 @@
 // // models/User.ts
 // import { Schema, model, Document, Types, InferSchemaType } from "mongoose";
-// import { StackModel } from "./stack";
+// import StackModel from "./stackModel";
 
 // type UserModel = InferSchemaType<typeof userSchema>;
 

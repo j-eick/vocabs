@@ -6,7 +6,13 @@ const stackSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    flashcards: [{ type: Schema.Types.ObjectId, ref: "Flashcard" }],
+    // user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    flashcards: [
+      {
+        flashcard: { type: Schema.Types.ObjectId, ref: "Flashcard" },
+        category: { type: String, enum: ["beginner", "intermediate", "advanced"] },
+      },
+    ],
   },
   { timestamps: true }
 );

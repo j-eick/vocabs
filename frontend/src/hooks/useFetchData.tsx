@@ -21,12 +21,11 @@ export default function useFetchData(): UseFetchFromLSReturn {
     async function fetchFlashcards() {
       try {
         setIsLoading(true);
-
-        console.log("Fetch from Zustand: (in-memory) => localStorage");
+        // FETCH CARDS
         const res = await FlashcardApi.fetchFlashcards();
-        const stacksAndCards: StackProp[] = await StackApi.fetchAllStacks();
-
         saveToFlashcardstore(res);
+        // FETCH STACKS
+        const stacksAndCards: StackProp[] = await StackApi.fetchAllStacks();
         savetoStore_allStackswithCards(stacksAndCards);
       } catch (err) {
         console.error(err);

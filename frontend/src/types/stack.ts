@@ -4,7 +4,7 @@ export type StackProp = {
   _id: string;
   name: string;
   description: string;
-  flashcards: FlashcardProp[];
+  flashcards: [];
   createdAt: string;
   updatedAt: string;
 };

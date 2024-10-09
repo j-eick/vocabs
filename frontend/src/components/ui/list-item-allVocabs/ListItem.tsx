@@ -11,7 +11,7 @@ export default function ListItem({ flashcard }: ListItemProp) {
   const { front_title, back_title } = flashcard;
   const removeFromStore = useFlashcardsStore((state) => state.removeFlashcardStore);
 
-  const deleteFlashcard = async (flashcard: FlashcardProp) => {
+  const handleDeleteFlashcard = async (flashcard: FlashcardProp) => {
     const id = flashcard._id;
 
     try {
@@ -30,7 +30,7 @@ export default function ListItem({ flashcard }: ListItemProp) {
         <MdOutlineDeleteOutline
           className="col-span-1 cursor-pointer"
           onClick={(e) => {
-            deleteFlashcard(flashcard);
+            handleDeleteFlashcard(flashcard);
             e.stopPropagation();
           }}
         />
