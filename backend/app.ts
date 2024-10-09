@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { getAllVocabs, getVocab, createVocab, updateVocab, deleteVocab } from "./src/routes/flashcardRoutes";
-import { createStack, getStacks } from "./src/controller/stackController";
+import { createStack, deleteStack, getStacks } from "./src/controller/stackController";
 
 const app: express.Application = express();
 
@@ -33,6 +33,6 @@ app.get("/api/stacks", getStacks);
 
 // app.patch("/api/stacks/:stackID", updateStack);
 
-// app.delete("/api/stacks/:stackID", deleteStack);
+app.delete("/api/stack/:stackID", deleteStack);
 
 export default app;

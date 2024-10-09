@@ -4,7 +4,10 @@ import { FlashcardProp } from "./types/flashcard";
 import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
 import useButtonStore from "./store/buttonStore";
 import useModalStore from "./store/modalStore";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useEffect } from "react";
+import { StackProp } from "./types/stack";
+import * as StackAPI from "../src/network/stackAPIs.ts";
 
 export default function App() {
   const allFlashcards = useFlashcardsStore((state) => state.allFlashcards);
@@ -12,6 +15,18 @@ export default function App() {
   const State_ModalNewVocabForm = useModalStore((state) => state.NewVocabFormModal_State);
   const showDialogModal = useModalStore((state) => state.ShowNewVocabModal);
   const allStacksWithCards = useFlashcardsStore((state) => state.allStacksWithCards);
+  const removeStack = useFlashcardsStore((state) => state.removeStack);
+
+  const handleDeleteStack = async (stack: StackProp) => {
+    console.log(stack._id);
+
+    try {
+      await StackAPI.deleteStack(stack._id);
+      removeStack(stack._id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     console.log(allStacksWithCards);
@@ -28,13 +43,28 @@ export default function App() {
         <ul>
           {allStacksWithCards.map((stack, i) => (
             <li key={i} className="border-2">
-              <p>{stack.name}</p>
+              <p className="flex justify-evenly ">
+                {stack.name}{" "}
+                <MdOutlineDeleteOutline
+                  onClick={(e) => {
+                    handleDeleteStack(stack);
+                    e.stopPropagation();
+                  }}
+                />
+              </p>
               <p>{`Number of flashcards: ${stack.flashcards.length}`}</p>
             </li>
           ))}
         </ul>
       )}
       <FormModal_blurredBg show={State_ModalNewVocabForm} onClickOutside={() => showDialogModal(false)} />
+      <button
+        onClick={() => {
+          localStorage.removeItem("myCards");
+        }}
+      >
+        clear{" "}
+      </button>
       {/* BUTTON: CREATE NEW VOCAB */}
       {newVocabButton.NewVocabButton_State && (
         <button

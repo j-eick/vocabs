@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 import StackModel from "../model/stackModel";
+import mongoose from "mongoose";
+import { CC } from "../../util/cliColors";
 
 /**
  * CREATE NEW STACK
@@ -50,5 +52,38 @@ export const getStacks: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error("Error while fetching Stacks from MongoDB " + error);
     res.status(500).json({ message: "Server errror while fetching stacks" });
+  }
+};
+
+/**
+ * DELETE STACK
+ */
+export const deleteStack: RequestHandler = async (req, res) => {
+  const targetID = req.params.stackID;
+  console.log(targetID);
+
+  try {
+    // check validity of flashcard id
+    if (!mongoose.isValidObjectId(targetID)) {
+      throw new Error("Invalid Flashcard ID!");
+    }
+
+    const targetStack = await StackModel.findById(targetID).exec();
+    if (!targetStack) {
+      throw new Error("Stack with this ID does not exist.");
+    }
+    await StackModel.findByIdAndDelete(targetID);
+
+    res.sendStatus(204);
+    CC("Removed Stack", "warn");
+    console.log(`${targetID}`);
+  } catch (err) {
+    console.error(err);
+
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "An unknown error occurred." });
+    }
   }
 };
