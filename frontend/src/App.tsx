@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
+import InfoModal from "./components/ui/modal/InfoModal.tsx";
 
 export default function App() {
   const [isLoading] = useFetchData();
@@ -20,6 +21,7 @@ export default function App() {
   const [showAskDelete, setShowAskDelete] = useState<string | null>("");
   const removeStackFlashcards = useFlashcardsStore((state) => state.removeAllFlashcardsFromStack);
   const removeStack = useFlashcardsStore((state) => state.removeStack);
+  const { ShowInfoModal } = useModalStore((state) => state);
 
   const handleAskDeleteStack = (stack: StackProp) => {
     setShowAskDelete(stack._id);
@@ -40,6 +42,12 @@ export default function App() {
 
   return (
     <main className="relative w-screen h-screen">
+      {ShowInfoModal && (
+        <InfoModal
+          className="w-4/5 p-3 z-50 rounded-lg border-none bg-blue-300"
+          content={<p>New Stack was created</p>}
+        />
+      )}
       <Header />
       {/* DASHBOARD ITEMS */}
       <section className="relative w-5/6 mx-auto my-0 mt-5">
