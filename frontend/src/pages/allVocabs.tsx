@@ -31,15 +31,6 @@ export default function AllVocabsPage() {
           </>
         )}
       </ul>
-      {/* 
-      <button
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2
-                    w-3/5 h-10 mx-auto
-                    grid place-items-center
-                    bg-slate-300 border-2 rounded-3xl`}
-      >
-        edit
-      </button> */}
     </main>
   );
 }
