@@ -1,0 +1,11 @@
+// .eslintrc.json
+{
+  "rules": {
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectPattern": { "multiline": true }
+      }
+    ]
+  }
+}
