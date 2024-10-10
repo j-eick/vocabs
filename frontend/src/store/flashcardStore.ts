@@ -14,6 +14,7 @@ type Actions = {
   saveToFlashcardStore: (flashcards: FlashcardProp[]) => void;
   addToFlashcardStore: (flashcards: FlashcardProp) => void;
   removeFlashcardStore: (flashcards: string) => void;
+  removeAllFlashcardsFromStack: (flashcards: string) => void;
   saveToAllStacksWithCards: (stacksAndCards: StackProp[]) => void;
   removeStack: (stackIDtoRemove: string) => void;
 };
@@ -38,9 +39,16 @@ const useFlashcardsStore = create<State & Actions>()(
           allFlashcards: [...state.allFlashcards, cards],
         })),
 
-      removeFlashcardStore: (idToRemove) =>
+      // filter by flashcardID
+      removeFlashcardStore: (flashcardIDtoRemove) =>
         set((state) => ({
-          allFlashcards: state.allFlashcards.filter((card) => card._id !== idToRemove),
+          allFlashcards: state.allFlashcards.filter((card) => card._id !== flashcardIDtoRemove),
+        })),
+
+      // filter by flashcard-stackID
+      removeAllFlashcardsFromStack: (flashcardStackID) =>
+        set((state) => ({
+          allFlashcards: state.allFlashcards.filter((card) => card.stack !== flashcardStackID),
         })),
 
       saveToAllStacksWithCards: (stacksAndCards) =>
@@ -51,18 +59,8 @@ const useFlashcardsStore = create<State & Actions>()(
       removeStack: (stackIDtoRemove) =>
         set((state) => ({
           allStacksWithCards: state.allStacksWithCards.filter((stack) => stack._id !== stackIDtoRemove),
+          allFlashcards: state.allFlashcards.filter((stack) => stack._id !== stackIDtoRemove),
         })),
-
-      // fetch from MongoDB
-      // fetchfromMongoDB: () =>
-      //   set(() => {
-
-      //   }),
-
-      // decrement: (qty: number) =>
-      //   set((state) => {
-      //     state.count -= qty
-      //   }),
     })),
     {
       name: "myCards",

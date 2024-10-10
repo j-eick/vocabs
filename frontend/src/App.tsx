@@ -5,35 +5,38 @@ import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
 import useButtonStore from "./store/buttonStore";
 import useModalStore from "./store/modalStore";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
+import useFetchData from "./hooks/useFetchData.tsx";
 
 export default function App() {
+  const [isLoading] = useFetchData();
   const allFlashcards = useFlashcardsStore((state) => state.allFlashcards);
   const newVocabButton = useButtonStore((state) => state);
   const State_ModalNewVocabForm = useModalStore((state) => state.NewVocabFormModal_State);
   const showDialogModal = useModalStore((state) => state.ShowNewVocabModal);
   const allStacksWithCards = useFlashcardsStore((state) => state.allStacksWithCards);
+  const [showAskDelete, setShowAskDelete] = useState<string | null>("");
+  const removeStackFlashcards = useFlashcardsStore((state) => state.removeAllFlashcardsFromStack);
   const removeStack = useFlashcardsStore((state) => state.removeStack);
-  const [showAskDelete, setShowAskDelete] = useState(false);
 
   const handleAskDeleteStack = (stack: StackProp) => {
-    console.log(stack._id);
-    setShowAskDelete(true);
+    setShowAskDelete(stack._id);
   };
 
   const handleConfirmDelete = async (stack: StackProp) => {
-    console.log(stack._id);
-
     try {
       await StackAPI.deleteStackWithCards(stack._id, true);
+      removeStackFlashcards(stack._id);
       removeStack(stack._id);
-      setShowAskDelete(false);
+      setShowAskDelete(null);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {});
 
   return (
     <main className="relative w-screen h-screen">
@@ -45,17 +48,18 @@ export default function App() {
       {allStacksWithCards && (
         <ul>
           {allStacksWithCards.map((stack, i) => (
-            <li key={i} className="border-2 relative">
+            <li key={i} className="border-2 relative hover:bg-slate-200">
               <p className="flex justify-evenly ">
                 {stack.name}{" "}
                 <MdOutlineDeleteOutline
+                  className="cursor-pointer"
                   onClick={(e) => {
                     handleAskDeleteStack(stack);
                     e.stopPropagation();
                   }}
                 />
               </p>
-              {showAskDelete && (
+              {showAskDelete === stack._id && (
                 <div className="flex-col bg-red-300">
                   <span>
                     Are you sure? <br /> <span className="text-xs">(Stack incl. all its cards will be deleted.)</span>
@@ -113,13 +117,17 @@ export default function App() {
     // grabbing last 3 indexes of allFlashcard-array
     const lastThreeEntries = flashcards.slice(flashcards.length - 3, flashcards.length);
 
+    console.log(!lastThreeEntries.length);
+
     return (
       <div className="mx-auto my-0 text-left border-2">
         <p>last 3 entries</p>
         <ul role="list" className="border border-slate-600">
-          {lastThreeEntries.map((entry) => (
-            <li key={entry._id}>{entry.front_title}</li>
-          ))}
+          {lastThreeEntries.length !== 0 ? (
+            lastThreeEntries.map((entry) => <li key={entry._id}>{entry.front_title}</li>)
+          ) : (
+            <li>You have 0 flashcards</li>
+          )}
         </ul>
       </div>
     );
