@@ -8,7 +8,6 @@ type UseFetchFromLSReturn = [boolean];
 
 export default function useFetchData(): UseFetchFromLSReturn {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    // useStore
     const { allFlashcards, saveToFlashcardStore, saveToAllStacksWithCards } = useFlashcardsStore(state => state);
 
     useEffect(() => {

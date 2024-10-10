@@ -11,11 +11,19 @@ type State = {
 };
 
 type Actions = {
+    // add fetched cards to store
     saveToFlashcardStore: (flashcards: FlashcardProp[]) => void;
+    // add one card to store
     addToFlashcardStore: (flashcards: FlashcardProp) => void;
+
+    // delete one card from store
     removeFlashcardStore: (flashcards: string) => void;
+    // delete all cards from store
     removeAllFlashcardsFromStack: (flashcards: string) => void;
+
+    // add fetched stacks (incl. their cards) to store
     saveToAllStacksWithCards: (stacksAndCards: StackProp[]) => void;
+    // delete specific stack (incl. all its cards) from store,
     removeStack: (stackIDtoRemove: string) => void;
 };
 
