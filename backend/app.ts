@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { getAllVocabs, getVocab, createVocab, updateVocab, deleteVocab } from "./src/routes/flashcardRoutes";
+import { getAllVocabs, getVocab, createVocab, updateVocab, deleteVocab } from "./src/controller/flashcardController";
 import { createStack, deleteStack, getStacks } from "./src/controller/stackController";
 
 const app: express.Application = express();

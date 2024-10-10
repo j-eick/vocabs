@@ -1,5 +1,3 @@
-import { FlashcardProp } from "./flashcard";
-
 export type StackProp = {
   _id: string;
   name: string;
