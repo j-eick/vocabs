@@ -7,33 +7,31 @@ import { StackProp } from "../types/stack";
 type UseFetchFromLSReturn = [boolean];
 
 export default function useFetchData(): UseFetchFromLSReturn {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  // useStore
-  const allflashcards = useFlashcardsStore((state) => state.allFlashcards);
-  const saveToFlashcardstore = useFlashcardsStore((state) => state.saveToFlashcardStore);
-  const savetoStore_allStackswithCards = useFlashcardsStore((state) => state.saveToAllStacksWithCards);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    // useStore
+    const { allFlashcards, saveToFlashcardStore, saveToAllStacksWithCards } = useFlashcardsStore(state => state);
 
-  useEffect(() => {
-    console.log(allflashcards);
+    useEffect(() => {
+        console.log(allFlashcards);
 
-    fetchFlashcards();
+        fetchFlashcards();
 
-    async function fetchFlashcards() {
-      try {
-        setIsLoading(true);
-        // FETCH CARDS
-        const res = await FlashcardApi.fetchFlashcards();
-        saveToFlashcardstore(res);
-        // FETCH STACKS
-        const stacksAndCards: StackProp[] = await StackApi.fetchAllStacks();
-        savetoStore_allStackswithCards(stacksAndCards);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  }, []);
+        async function fetchFlashcards() {
+            try {
+                setIsLoading(true);
+                // FETCH CARDS
+                const res = await FlashcardApi.fetchFlashcards();
+                saveToFlashcardStore(res);
+                // FETCH STACKS
+                const stacksAndCards: StackProp[] = await StackApi.fetchAllStacks();
+                saveToAllStacksWithCards(stacksAndCards);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }, []);
 
-  return [isLoading];
+    return [isLoading];
 }
