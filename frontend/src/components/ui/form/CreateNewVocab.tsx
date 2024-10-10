@@ -24,6 +24,7 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
   const showNewVocabButton = useButtonStore((state) => state.ShowNewVocabButton);
   const showModal = useModalStore((state) => state.ShowNewVocabModal);
   const addToFlashcardStore = useFlashcardsStore((state) => state.addToFlashcardStore);
+  const { setShowInfoModal } = useModalStore((state) => state);
   const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
     _id: "",
     front_title: "",
@@ -58,6 +59,7 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
       // HIDE modal && SHOW add-vocab-button
       showModal(false);
       showNewVocabButton(true);
+      setShowInfoModal(true, 2);
     } catch (err) {
       console.error(err);
     }
