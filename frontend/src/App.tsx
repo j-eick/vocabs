@@ -10,6 +10,7 @@ import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
 import InfoModal from "./components/ui/modal/InfoModal.tsx";
+import Nav from "./components/ui/Nav.tsx";
 
 export default function App() {
     const [isLoading] = useFetchData();
@@ -38,16 +39,16 @@ export default function App() {
     useEffect(() => {}, [allStacksWithCards]);
 
     return (
-        <main className='relative w-screen h-screen'>
+        <main className="relative w-screen h-screen">
             {ShowInfoModal && (
                 <InfoModal
-                    className='w-4/5 p-3 z-50 rounded-lg border-none bg-blue-300'
+                    className="w-4/5 p-3 z-50 rounded-lg border-none bg-blue-300"
                     content={<p>New Stack was created</p>}
                 />
             )}
             <Header />
             {/* DASHBOARD ITEMS */}
-            <section className='relative w-5/6 mx-auto my-0 mt-5'>
+            <section className="relative w-5/6 mx-auto my-0 mt-5">
                 <LatestVocab flashcards={allFlashcards} />
             </section>
             {allStacksWithCards && (
@@ -55,12 +56,12 @@ export default function App() {
                     {allStacksWithCards.map((stack, i) => (
                         <li
                             key={i}
-                            className='border-2 relative hover:bg-slate-200'
+                            className="border-2 relative hover:bg-slate-200"
                         >
-                            <p className='flex justify-evenly '>
+                            <p className="flex justify-evenly ">
                                 {stack.name}{" "}
                                 <MdOutlineDeleteOutline
-                                    className='cursor-pointer'
+                                    className="cursor-pointer"
                                     onClick={e => {
                                         handleAskDeleteStack(stack);
                                         e.stopPropagation();
@@ -68,14 +69,14 @@ export default function App() {
                                 />
                             </p>
                             {showAskDelete === stack._id && (
-                                <div className='flex-col bg-red-300'>
+                                <div className="flex-col bg-red-300">
                                     <span>
                                         Are you sure? <br />{" "}
-                                        <span className='text-xs'>(Stack incl. all its cards will be deleted.)</span>
+                                        <span className="text-xs">(Stack incl. all its cards will be deleted.)</span>
                                     </span>
-                                    <div className='flex gap-1 justify-center'>
+                                    <div className="flex gap-1 justify-center">
                                         <button
-                                            className='border'
+                                            className="border"
                                             onClick={e => {
                                                 handleConfirmDelete(stack);
                                                 e.stopPropagation();
@@ -84,9 +85,9 @@ export default function App() {
                                             yes
                                         </button>
                                         <button
-                                            className='border'
+                                            className="border"
                                             onClick={e => {
-                                                setShowAskDelete(false);
+                                                setShowAskDelete("");
                                                 e.stopPropagation();
                                             }}
                                         >
@@ -118,6 +119,7 @@ export default function App() {
                     Add Vocab
                 </button>
             )}
+            <Nav navItems={["Dashboard", "Session", "Collection"]} />
         </main>
     );
 
@@ -126,20 +128,29 @@ export default function App() {
     };
     //TODO: turn this into a caroussel.
     function LatestVocab({ flashcards }: LatestVocabProps) {
-        // grabbing last 3 indexes of allFlashcard-array
-        const lastThreeEntries = flashcards.slice(flashcards.length - 3, flashcards.length);
+        const totalEntries = flashcards.length;
+        let lastMaxThreeEntries: FlashcardProp[] = [];
 
-        console.log(!lastThreeEntries.length);
+        if (!flashcards || !flashcards.length) {
+            throw new Error("flashcards is empty");
+        }
+
+        // array has min. 3 items, take last 3:
+        if (totalEntries >= 3) {
+            lastMaxThreeEntries = flashcards.slice(flashcards.length - 3, flashcards.length);
+        } else if (totalEntries <= 2) {
+            lastMaxThreeEntries = flashcards;
+        }
 
         return (
-            <div className='mx-auto my-0 text-left border-2'>
+            <div className="mx-auto my-0 text-left border-2">
                 <p>last 3 entries</p>
                 <ul
-                    role='list'
-                    className='border border-slate-600'
+                    role="list"
+                    className="border border-slate-600"
                 >
-                    {lastThreeEntries.length !== 0 ? (
-                        lastThreeEntries.map(entry => <li key={entry._id}>{entry.front_title}</li>)
+                    {flashcards.length !== 0 ? (
+                        lastMaxThreeEntries.map(entry => <li key={entry._id}>{entry.front_title}</li>)
                     ) : (
                         <li>You have 0 flashcards</li>
                     )}
