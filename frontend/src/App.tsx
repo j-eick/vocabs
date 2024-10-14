@@ -1,5 +1,4 @@
 import useFlashcardsStore from "./store/flashcardStore";
-import Header from "./components/ui/header/Header";
 import { FlashcardProp } from "./types/flashcard";
 import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
 import useButtonStore from "./store/buttonStore";
@@ -77,7 +76,8 @@ export default function App() {
                             className="border-2 relative hover:bg-slate-200"
                         >
                             <p className="flex justify-evenly ">
-                                {stack.name}{" "}
+                                {stack.name}
+                                {`ID: ${stack._id.slice(stack._id.length - 3)}`}
                                 <MdOutlineDeleteOutline
                                     className="cursor-pointer"
                                     onClick={e => {
@@ -124,13 +124,15 @@ export default function App() {
                 onClickOutside={() => setFlashcardFormModal(false)}
             />
 
-            <Nav
-                navItems={[
-                    { path: "/", name: "Dashboard", active: true },
-                    { path: "/study", name: "Session", active: false },
-                    { path: "/allVocabs", name: "Collection", active: false },
-                ]}
-            />
+            {ShowAddFlashcardButton && (
+                <Nav
+                    navItems={[
+                        { path: "/", name: "Dashboard", active: true },
+                        { path: "/study", name: "Session", active: false },
+                        { path: "/allVocabs", name: "Collection", active: false },
+                    ]}
+                />
+            )}
         </main>
     );
 
