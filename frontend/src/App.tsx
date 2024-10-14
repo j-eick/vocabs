@@ -11,6 +11,7 @@ import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
 import InfoModal from "./components/ui/modal/InfoModal.tsx";
 import Nav from "./components/ui/Nav.tsx";
+import Profile from "./components/ui/profile/Profile.tsx";
 
 export default function App() {
     const [isLoading] = useFetchData();
@@ -46,7 +47,24 @@ export default function App() {
                     content={<p>New Stack was created</p>}
                 />
             )}
-            <Header />
+            <div className="h-1/4 px-3 flex items-center justify-between bg-green-400">
+                <Profile className="" />
+                {/* BUTTON: CREATE NEW VOCAB */}
+                {ShowAddFlashcardButton && (
+                    <button
+                        onClick={e => {
+                            e.stopPropagation();
+                            setFlashcardFormModal(true);
+                            setAddFlashcardButton(false);
+                        }}
+                        className={`w-2/6 h-2/3 px-3 flex items-center
+
+								    border-2 rounded-md bg-red-400`}
+                    >
+                        Add Vocab
+                    </button>
+                )}
+            </div>
             {/* DASHBOARD ITEMS */}
             <section className="relative w-5/6 mx-auto my-0 mt-5">
                 <LatestVocab flashcards={allFlashcards} />
@@ -105,21 +123,14 @@ export default function App() {
                 show={ShowFlashcardFormModal}
                 onClickOutside={() => setFlashcardFormModal(false)}
             />
-            {/* BUTTON: CREATE NEW VOCAB */}
-            {ShowAddFlashcardButton && (
-                <button
-                    onClick={e => {
-                        e.stopPropagation();
-                        setFlashcardFormModal(true);
-                        setAddFlashcardButton(false);
-                    }}
-                    className={`fixed w-5/6 p-3 bottom-6 -translate-x-1/2
-										border-2 rounded-md`}
-                >
-                    Add Vocab
-                </button>
-            )}
-            <Nav navItems={["Dashboard", "Session", "Collection"]} />
+
+            <Nav
+                navItems={[
+                    { path: "/", name: "Dashboard", active: true },
+                    { path: "/study", name: "Session", active: false },
+                    { path: "/allVocabs", name: "Collection", active: false },
+                ]}
+            />
         </main>
     );
 
