@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useFlashcardsStore from "../../../store/flashcardStore";
 import { useClickOutside } from "../../../utils/clickOutside";
 import useButtonStore from "../../../store/buttonStore";
 import useModalStore from "../../../store/modalStore";
 import * as FlashcardAPI from "../../../network/flashcard_apis";
-import Dropdown from "../dropdown-menu/Dropdown";
 
 export type NewFlashcard = {
     _id: string;
@@ -12,15 +11,16 @@ export type NewFlashcard = {
     front_text: string;
     back_title: string;
     back_text: string;
-    stack: "";
+    stack: string;
 };
 
 type CreateNewVocab = {
     onClickOutside: () => void;
+    dropdownValue: string;
 };
 
 // INFO: Add Pending STate while flashcard is being created
-export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
+export default function CreateNewVocab({ onClickOutside, dropdownValue }: CreateNewVocab) {
     const { setAddFlashcardButton } = useButtonStore(state => state);
     const { setFlashcardFormModal, setShowInfoModal } = useModalStore(state => state);
     const { addToFlashcardStore } = useFlashcardsStore(state => state);
@@ -41,6 +41,8 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
 
         try {
             const res = await FlashcardAPI.createFlashcard(newFlashcard);
+
+            console.log(res);
 
             if (res) {
                 addToFlashcardStore(res);
@@ -73,60 +75,65 @@ export default function CreateNewVocab({ onClickOutside }: CreateNewVocab) {
         }));
     };
 
+    useEffect(() => {
+        setNewFlashcard(prev => ({
+            ...prev,
+            stack: dropdownValue,
+        }));
+    }, [dropdownValue]);
+
     return (
-        <div ref={ref}>
-            {/* <Dropdown
-          listItems={allStacksWithCards}
-          onChange={handleDropdownChange}
-          dropDownValue={stackDropDownValue}
-          label="Save to stack:"
-        /> */}
+        <div>
             <form
                 onSubmit={e => handleSubmit(e)}
-                action='/api/vocabs'
-                method='post'
-                name='create flashcard'
-                className='mt-4 flex flex-col'
+                action="/api/vocabs"
+                method="post"
+                name="create flashcard"
+                className="mt-4 flex flex-col"
             >
-                <label htmlFor='frontTitle'>Front Title</label>
+                <label htmlFor="frontTitle">Front Title</label>
                 <input
-                    id='frontTitle'
-                    type='text'
-                    name='front_title'
+                    id="frontTitle"
+                    type="text"
+                    name="front_title"
                     value={newFlashcard.front_title}
                     onChange={e => inputFieldHandler(e)}
-                    className='border-2'
+                    className="border-2"
+                    autoComplete="off"
                 />
-                <label htmlFor='frontDescription'>Front Description </label>
+                <label htmlFor="frontDescription">Front Description </label>
                 <input
-                    id='frontDescription'
-                    type='text'
-                    name='front_text'
+                    id="frontDescription"
+                    type="text"
+                    name="front_text"
                     value={newFlashcard.front_text}
                     onChange={e => inputFieldHandler(e)}
-                    className='border-2'
+                    className="border-2"
+                    autoComplete="off"
                 />
-                <label htmlFor='backTitle'>Back Title</label>
+                <label htmlFor="backTitle">Back Title</label>
                 <input
-                    id='backTitle'
-                    type='text'
-                    name='back_title'
+                    id="backTitle"
+                    type="text"
+                    name="back_title"
                     value={newFlashcard.back_title}
                     onChange={e => inputFieldHandler(e)}
-                    className='border-2'
+                    className="border-2"
+                    autoComplete="off"
                 />
-                <label htmlFor='backDescription'>Back Description</label>
+                <label htmlFor="backDescription">Back Description</label>
                 <input
-                    id='backDescription'
-                    type='text'
-                    name='back_text'
+                    id="backDescription"
+                    type="text"
+                    name="back_text"
                     value={newFlashcard.back_text}
                     onChange={e => inputFieldHandler(e)}
-                    className='border-2'
+                    className="border-2"
+                    autoComplete="off"
                 />
                 <button
-                    type='submit'
-                    className='bg-slate-300 mt-4 p-2 cursor-pointer'
+                    type="submit"
+                    className="bg-slate-300 mt-4 p-2 cursor-pointer"
                 >
                     Create Vocab
                 </button>
