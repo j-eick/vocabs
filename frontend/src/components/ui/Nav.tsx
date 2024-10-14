@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 type NavObject = {
     path: string;
@@ -8,12 +9,12 @@ type NavObject = {
 
 type NavProps = {
     navItems: NavObject[];
-    path?: string;
+    className?: string;
 };
 
-export default function Nav({ navItems, path }: NavProps) {
+export default function Nav({ navItems, className }: NavProps) {
     return (
-        <ul className="h-11 w-full px-4 fixed bottom-0 flex justify-between bg-slate-300">
+        <ul className={twMerge(`h-11 w-full px-4 fixed bottom-0 flex justify-between bg-slate-300 ${className} `)}>
             {navItems.map(navItem => (
                 <li
                     key={navItem.name}
