@@ -13,7 +13,7 @@ export default function ListItem({ flashcard }: ListItemProp) {
 
     console.log(stack);
 
-    const cardID = _id => {
+    const cardID = (_id: string) => {
         const result = _id.slice(_id.length - 3);
         return result;
     };

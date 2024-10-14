@@ -39,7 +39,7 @@ export default function App() {
     useEffect(() => {}, [allStacksWithCards]);
 
     return (
-        <main className="relative w-screen h-screen">
+        <main className="relative h-screen">
             {ShowInfoModal && (
                 <InfoModal
                     className="w-4/5 p-3 z-50 rounded-lg border-none bg-blue-300"
@@ -69,15 +69,14 @@ export default function App() {
                 <LatestVocab flashcards={allFlashcards} />
             </section>
             {allStacksWithCards && (
-                <ul>
+                <ul className="w-4/5 max-h-60 mx-auto mt-5 border-2 border-red-400 overflow-y-auto">
                     {allStacksWithCards.map((stack, i) => (
                         <li
                             key={i}
                             className="border-2 relative hover:bg-slate-200"
                         >
-                            <p className="flex justify-evenly ">
-                                {stack.name}
-                                {`ID: ${stack._id.slice(stack._id.length - 3)}`}
+                            <p className="flex justify-evenly gap-2 ">
+                                {stack.name}, {`ID: ${stack._id.slice(stack._id.length - 3)}`}
                                 <MdOutlineDeleteOutline
                                     className="cursor-pointer"
                                     onClick={e => {
@@ -144,9 +143,9 @@ export default function App() {
         const totalEntries = flashcards.length;
         let lastMaxThreeEntries: FlashcardProp[] = [];
 
-        if (!flashcards || !flashcards.length) {
-            throw new Error("flashcards is empty");
-        }
+        // if (!flashcards || !flashcards.length) {
+        //     throw new Error("flashcards is empty");
+        // }
 
         // array has min. 3 items, take last 3:
         if (totalEntries >= 3) {

@@ -11,7 +11,7 @@ interface ModalProps {
 }
 
 const useModalStore = create<ModalProps>()(set => ({
-    // Form: New Vocab
+    // Form MODAL: New Vocab
     ShowFlashcardFormModal: false,
     setFlashcardFormModal: state => set(() => ({ ShowFlashcardFormModal: state })),
 
