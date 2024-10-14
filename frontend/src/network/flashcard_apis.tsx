@@ -6,16 +6,16 @@ import { NewFlashcard } from "../components/ui/form/CreateNewVocab";
  * @returns updated JSON
  */
 export const fetchFlashcards = async (): Promise<FlashcardProp[]> => {
-  const res = await fetch("/api/vocabs", {
-    method: "GET",
-  });
+    const res = await fetch("/api/vocabs", {
+        method: "GET",
+    });
 
-  if (!res.ok) {
-    throw Error(`Error while fetching flashcards from DB: ${res}`);
-  }
-  const result = await res.json();
+    if (!res.ok) {
+        throw Error(`Error while fetching flashcards from DB: ${res}`);
+    }
+    const result = await res.json();
 
-  return result;
+    return result;
 };
 
 /**
@@ -23,20 +23,20 @@ export const fetchFlashcards = async (): Promise<FlashcardProp[]> => {
  * @returns updated JSON
  */
 export const createFlashcard = async (newFlashcard: NewFlashcard): Promise<FlashcardProp[]> => {
-  const res = await fetch("/api/vocabs", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newFlashcard),
-  });
+    const res = await fetch("/api/vocabs", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newFlashcard),
+    });
 
-  if (!res.ok) {
-    throw Error(`Error while fetching flashcards from DB: ${res}`);
-  }
-  const result = res.json();
+    if (!res.ok) {
+        throw Error(`Error while fetching flashcards from DB: ${res}`);
+    }
+    const result = await res.json();
 
-  return result;
+    return result;
 };
 
 /**
@@ -45,7 +45,7 @@ export const createFlashcard = async (newFlashcard: NewFlashcard): Promise<Flash
  * @returns updated JSON
  */
 export const deleteFlashcard = async (id: string) => {
-  await fetch(`/api/vocabs/${id}`, {
-    method: "DELETE",
-  });
+    await fetch(`/api/vocabs/${id}`, {
+        method: "DELETE",
+    });
 };
