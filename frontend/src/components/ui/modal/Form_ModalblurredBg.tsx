@@ -72,7 +72,6 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
                                         listItems={allStacksWithCards}
                                         onChange={handleDropdownChange}
                                         value={stackDropDownValue}
-                                        label="Save to stack:"
                                     />
                                 </div>
                             )}
