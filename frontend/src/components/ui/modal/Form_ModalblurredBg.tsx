@@ -53,7 +53,9 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
                                     {allStacksWithCards.map(stack => (
                                         <li
                                             key={stack._id}
-                                            className="p-1 border border-slate-800"
+                                            className={`p-1 border border-slate-800 ${
+                                                stackValue === stack._id ? "border-white" : ""
+                                            }`}
                                             onClick={() => handleCollectionClicked(stack)}
                                         >
                                             {stack.name}
