@@ -29,24 +29,27 @@ type CreateVocabBody = {
     front_text: string;
     back_title: string;
     back_text: string;
-    stackID?: string;
+    stack: string;
 };
 export const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unknown> = async (req, res) => {
+    const { front_title, front_text, back_title, back_text, stack } = req.body;
+
+    let stackInstance;
+
     try {
-        const { front_title, front_text, back_title, back_text, stackID } = req.body;
-
-        let stack;
-
-        if (!stackID) {
-            stack = await StackModel.create({
+        if (!stack) {
+            console.log("b");
+            stackInstance = await StackModel.create({
                 name: "new stack",
                 description: "enter description",
                 flashcards: [],
             });
         } else {
-            stack = await StackModel.findById(stackID);
+            console.log("c");
+            stackInstance = await StackModel.findById(stack);
+            console.log(stackInstance);
 
-            if (!stack) {
+            if (!stackInstance) {
                 return res.status(404).json({ message: "Stack not found" });
             }
         }
@@ -56,12 +59,12 @@ export const createVocab: RequestHandler<unknown, unknown, CreateVocabBody, unkn
             front_text,
             back_title,
             back_text,
-            stack: stack._id,
+            stack: stackInstance._id,
         });
 
         // add flashcards to the stack's flashcard array
-        stack.flashcards.push(newCard._id);
-        await stack.save();
+        stackInstance.flashcards.push(newCard._id);
+        await stackInstance.save();
 
         res.status(200).json(newCard);
 
