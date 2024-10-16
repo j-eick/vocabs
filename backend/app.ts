@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { getAllVocabs, getVocab, createVocab, updateVocab, deleteVocab } from "./src/controller/flashcardController";
-import { createStack, deleteStack, getStacks } from "./src/controller/stackController";
+import { createStack, deleteStack, getStacks, renameStack } from "./src/controller/stackController";
 
 const app: express.Application = express();
 
@@ -26,6 +26,8 @@ app.delete("/api/vocabs/:vocabID", deleteVocab);
 
 // CONTEXT: STACKS
 app.post("/api/stacks", createStack);
+
+app.patch("/api/stacks/:stackID", renameStack);
 
 app.get("/api/stacks", getStacks);
 
