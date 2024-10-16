@@ -52,10 +52,7 @@ export default function CollectionsList() {
         try {
             const res = await StackAPI.renameStack(StackID, newCollectionName);
 
-            console.log(res);
-
             if (res) {
-                console.log(res);
                 renameStack(stack._id, newCollectionName);
                 setShowInputModal(false);
                 setEditTargetStack("");
