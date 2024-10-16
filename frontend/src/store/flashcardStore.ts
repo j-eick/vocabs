@@ -25,6 +25,8 @@ type Actions = {
     saveToAllStacksWithCards: (stacksAndCards: StackProp[]) => void;
     // delete specific stack (incl. all its cards) from store,
     removeStack: (stackIDtoRemove: string) => void;
+    // rename specific stack
+    renameStack: (stackIDtoRename: string, newName: string) => void;
 };
 
 const useFlashcardsStore = create<State & Actions>()(
@@ -69,6 +71,13 @@ const useFlashcardsStore = create<State & Actions>()(
                     allStacksWithCards: state.allStacksWithCards.filter(stack => stack._id !== stackIDtoRemove),
                     allFlashcards: state.allFlashcards.filter(stack => stack._id !== stackIDtoRemove),
                 })),
+
+            renameStack: (stackIDtoRename, newName) =>
+                set(state => {
+                    state.allStacksWithCards = state.allStacksWithCards.map(stack =>
+                        stack._id === stackIDtoRename ? { ...stack, name: newName } : stack
+                    );
+                }),
         })),
         {
             name: "myCards",
