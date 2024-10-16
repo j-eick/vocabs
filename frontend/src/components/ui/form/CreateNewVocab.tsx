@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import useFlashcardsStore from "../../../store/flashcardStore";
 import { useClickOutside } from "../../../utils/clickOutside";
 import useButtonStore from "../../../store/buttonStore";
@@ -66,7 +66,7 @@ export default function CreateNewVocab({ onClickOutside, dropdownValue }: Create
         }
     };
 
-    const inputFieldHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputFieldHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
         setNewFlashcard(prev => ({
