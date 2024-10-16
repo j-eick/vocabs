@@ -23,7 +23,7 @@ type CreateNewVocab = {
 export default function CreateNewVocab({ onClickOutside, dropdownValue }: CreateNewVocab) {
     const { setAddFlashcardButton } = useButtonStore(state => state);
     const { setFlashcardFormModal, setShowInfoModal } = useModalStore(state => state);
-    const { addToFlashcardStore } = useFlashcardsStore(state => state);
+    const { addToFlashcardStore, allStacksWithCards } = useFlashcardsStore(state => state);
     const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
         _id: "",
         front_title: "",
@@ -60,7 +60,10 @@ export default function CreateNewVocab({ onClickOutside, dropdownValue }: Create
             // HIDE modal && SHOW add-vocab-button
             setFlashcardFormModal(false);
             setAddFlashcardButton(true);
-            setShowInfoModal(true, 2);
+            const stackExists = allStacksWithCards.find(stack => stack._id === newFlashcard.stack);
+            if (!stackExists) {
+                setShowInfoModal(true, 2);
+            }
         } catch (err) {
             console.error(err);
         }
