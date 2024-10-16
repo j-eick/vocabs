@@ -2,6 +2,7 @@ import useFlashcardsStore from "../store/flashcardStore";
 import { useEffect } from "react";
 import ListItem from "../components/ui/list-item-allVocabs/ListItem";
 import Nav from "../components/ui/Nav";
+import CollectionsList from "../components/ui/collections/CollectionsList";
 
 export default function AllVocabsPage() {
     const { allFlashcards } = useFlashcardsStore(state => state);
@@ -14,6 +15,7 @@ export default function AllVocabsPage() {
 
     return (
         <main className="relative pt-8">
+            <CollectionsList />
             <ul
                 role="list"
                 className="w-5/6 mx-auto mb-24"
