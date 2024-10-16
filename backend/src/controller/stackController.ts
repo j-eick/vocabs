@@ -32,6 +32,56 @@ export const createStack: RequestHandler = async (req, res) => {
     }
 };
 
+// type StackProp = {
+//     _id: string;
+//     name: string;
+//     description: string;
+//     flashcards: [];
+//     createdAt: string;
+//     updatedAt: string;
+// };
+
+/**
+ * RENAME STACK
+ * @param req
+ * @param res
+ */
+export const renameStack: RequestHandler = async (req, res) => {
+    const { newName } = req.body;
+    const { stackID } = req.params;
+
+    if (!stackID || stackID == null) {
+        return res.status(400).json({ message: "Stack ID is required." });
+    }
+    if (!newName || newName == null) {
+        return res.status(400).json({ message: "New name is required." });
+    }
+
+    let updatedStack;
+
+    const targetStack = stackID;
+    const updatedName = { name: newName };
+
+    try {
+        updatedStack = await StackModel.findByIdAndUpdate(targetStack, updatedName, {
+            new: true,
+        });
+
+        if (!updatedStack || updatedStack == null) {
+            throw new Error("Error while fetching target stack.");
+        }
+
+        console.log(updatedStack);
+
+        res.status(201).json(updatedStack);
+
+        console.log(updatedStack);
+    } catch (error) {
+        console.error("Server error while renaming a collection:" + error);
+        res.status(500).send("Server error while renaming a collection.");
+    }
+};
+
 /**
  * TODO: Reduce amount of transfered data: load the flashcards separately via an additional API request when the user clicks on a specific stack.
  */
