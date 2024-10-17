@@ -11,8 +11,6 @@ export default function ListItem({ flashcard }: ListItemProp) {
     const { front_title, back_title, _id, stack } = flashcard;
     const removeFromStore = useFlashcardsStore(state => state.removeFlashcardStore);
 
-    console.log(stack);
-
     const cardID = (_id: string) => {
         const result = _id.slice(_id.length - 3);
         return result;

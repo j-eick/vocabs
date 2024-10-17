@@ -1,5 +1,5 @@
 export type FlashcardProp = {
-    _id?: string;
+    _id: string;
     front_title: string;
     front_text?: string;
     back_title?: string;
