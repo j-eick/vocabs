@@ -22,7 +22,7 @@ export const fetchFlashcards = async (): Promise<FlashcardProp[]> => {
  * CREATE CARD
  * @returns updated JSON
  */
-export const createFlashcard = async (newFlashcard: NewFlashcard): Promise<FlashcardProp[]> => {
+export const createFlashcard = async (newFlashcard: NewFlashcard): Promise<FlashcardProp> => {
     const res = await fetch("/api/vocabs", {
         method: "POST",
         headers: {

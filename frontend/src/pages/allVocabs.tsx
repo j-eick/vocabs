@@ -1,17 +1,10 @@
 import useFlashcardsStore from "../store/flashcardStore";
-import { useEffect } from "react";
 import ListItem from "../components/ui/list-item-allVocabs/ListItem";
 import Nav from "../components/ui/Nav";
 import CollectionsList from "../components/ui/collections/CollectionsList";
 
 export default function AllVocabsPage() {
-    const { allFlashcards } = useFlashcardsStore(state => state);
-
-    useEffect(() => {
-        if (allFlashcards) {
-            console.log(allFlashcards);
-        }
-    });
+    const allFlashcards = useFlashcardsStore(state => state.allFlashcards);
 
     return (
         <main className="relative pt-8">

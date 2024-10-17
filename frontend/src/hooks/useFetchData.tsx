@@ -18,9 +18,11 @@ export default function useFetchData(): UseFetchFromLSReturn {
         async function fetchFlashcards() {
             try {
                 setIsLoading(true);
+
                 // FETCH CARDS
                 const res = await FlashcardApi.fetchFlashcards();
                 saveToFlashcardStore(res);
+
                 // FETCH STACKS
                 const stacksAndCards: StackProp[] = await StackApi.fetchAllStacks();
                 saveToAllStacksWithCards(stacksAndCards);
