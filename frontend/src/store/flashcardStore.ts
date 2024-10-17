@@ -1,5 +1,6 @@
 // flashcardsStore.js
 import { create } from "zustand";
+import { Draft } from "immer";
 import { immer } from "zustand/middleware/immer";
 import { FlashcardProp } from "../types/flashcard";
 import { persist } from "zustand/middleware";
@@ -13,8 +14,12 @@ type State = {
 type Actions = {
     // add fetched cards to store
     saveToFlashcardStore: (flashcards: FlashcardProp[]) => void;
-    // add one card to store
+    // add one card to flashcards-array
     addToFlashcardStore: (flashcards: FlashcardProp) => void;
+    // add one card to allStacksWithCards-array
+    addCardToAllStacksWithCards: (flashcard: FlashcardProp, newStack?: StackProp) => void;
+    // create new stack + add new card
+    // createNewStackWithCard: (flashcard: FlashcardProp, createStack: boolean) => void;
 
     // delete one card from store
     removeFlashcardStore: (flashcards: string) => void;
@@ -45,15 +50,41 @@ const useFlashcardsStore = create<State & Actions>()(
 
             // ADD flashcard to store
             addToFlashcardStore: cards =>
-                set(state => ({
-                    allFlashcards: [...state.allFlashcards, cards],
-                })),
+                set(state => {
+                    state.allFlashcards.push(cards);
+                }),
+
+            addCardToAllStacksWithCards: (card, newStack) =>
+                set((state: Draft<State>) => {
+                    if (newStack) {
+                        console.log("into new stack");
+                        state.allStacksWithCards.push(newStack);
+                    } else {
+                        console.log("into existing stack");
+
+                        state.allStacksWithCards = state.allStacksWithCards.map(targetStack =>
+                            targetStack._id === card.stack
+                                ? {
+                                      ...targetStack,
+                                      flashcards: [...targetStack.flashcards, card],
+                                  }
+                                : {
+                                      ...targetStack,
+                                  }
+                        );
+                    }
+                }),
+
+            // createNewStackWithCard: (card, createStack) => set(state => {}),
 
             // filter by flashcardID
             removeFlashcardStore: flashcardIDtoRemove =>
-                set(state => ({
-                    allFlashcards: state.allFlashcards.filter(card => card._id !== flashcardIDtoRemove),
-                })),
+                set((state: Draft<State>) => {
+                    state.allFlashcards = state.allFlashcards.filter(card => card._id !== flashcardIDtoRemove);
+                    state.allStacksWithCards = state.allStacksWithCards.filter(stack =>
+                        stack.flashcards.map(card => card._id !== flashcardIDtoRemove)
+                    );
+                }),
 
             // filter by flashcard-stackID
             removeAllFlashcardsFromStack: flashcardStackID =>
