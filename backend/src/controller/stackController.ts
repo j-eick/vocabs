@@ -83,6 +83,7 @@ export const renameStack: RequestHandler = async (req, res) => {
 };
 
 /**
+ * GET all stacks
  * TODO: Reduce amount of transfered data: load the flashcards separately via an additional API request when the user clicks on a specific stack.
  */
 // interface IStack {
@@ -103,6 +104,27 @@ export const getStacks: RequestHandler = async (req, res) => {
     } catch (error) {
         console.error("Error while fetching Stacks from MongoDB " + error);
         res.status(500).json({ message: "Server errror while fetching stacks" });
+    }
+};
+
+/**
+ * GET target stack
+ * @param req
+ * @param res
+ */
+export const getStack: RequestHandler = async (req, res) => {
+    const id = req.params.stackID;
+
+    try {
+        if (!id) {
+            res.status(500).json({ message: "Stack ID is missing." });
+        } else {
+            const targetStack = await StackModel.findById(id);
+            res.status(200).json(targetStack);
+        }
+    } catch (error) {
+        console.error("Error while fetching target stack from DB. " + error);
+        res.status(500).json({ message: "Server error while fetching target stack." });
     }
 };
 
