@@ -4,14 +4,16 @@ import { useClickOutside } from "../../../utils/clickOutside";
 import useButtonStore from "../../../store/buttonStore";
 import useModalStore from "../../../store/modalStore";
 import * as FlashcardAPI from "../../../network/flashcard_apis";
+import * as StackAPI from "../../../network/stackAPIs.ts";
+import { StackProp } from "../../../types/stack.ts";
 
 export type NewFlashcard = {
-    _id: string;
+    _id?: string;
     front_title: string;
-    front_text: string;
-    back_title: string;
-    back_text: string;
-    stack: string;
+    front_text?: string;
+    back_title?: string;
+    back_text?: string;
+    stack?: string;
 };
 
 type CreateNewVocab = {
@@ -23,7 +25,7 @@ type CreateNewVocab = {
 export default function CreateNewVocab({ onClickOutside, dropdownValue }: CreateNewVocab) {
     const { setAddFlashcardButton } = useButtonStore(state => state);
     const { setFlashcardFormModal, setShowInfoModal } = useModalStore(state => state);
-    const { addToFlashcardStore, allStacksWithCards } = useFlashcardsStore(state => state);
+    const { addToFlashcardStore, allStacksWithCards, addCardToAllStacksWithCards } = useFlashcardsStore(state => state);
     const [newFlashcard, setNewFlashcard] = useState<NewFlashcard>({
         _id: "",
         front_title: "",
@@ -40,30 +42,56 @@ export default function CreateNewVocab({ onClickOutside, dropdownValue }: Create
         e.preventDefault();
 
         try {
+            /**
+             * [x] creating flashcard
+             *      [x] adding flashcard to overall flashcard array //TODO: not the best solution...
+             * - add flashcard to stack:
+             *   does stack exist?
+             *      no:
+             *          [x]  adding flashcard to newly created stack
+             *      yes:
+             *          [x]  adding flashcard to existing stack
+             */
             const res = await FlashcardAPI.createFlashcard(newFlashcard);
+            console.log(allStacksWithCards);
 
-            console.log(res);
-
-            if (res) {
-                addToFlashcardStore(res);
-                // reset input field
-                setNewFlashcard({
-                    _id: "",
-                    front_title: "",
-                    front_text: "",
-                    back_title: "",
-                    back_text: "",
-                    stack: "",
-                });
+            if (!res) {
+                throw new Error("Error on the frontend, while attempting to fetch created flashcard.");
             }
 
-            // HIDE modal && SHOW add-vocab-button
+            /**
+             * find new stack that was created, when flashcard was created
+             * - stackExists = true, if allStacksWithCards DOES contain that stack
+             * - stackExists = false, if allStacksWithCards DOESN'T contain that stack yet
+             */
+            const stackExists = allStacksWithCards.find(stack => stack._id === newFlashcard.stack);
+            console.log(stackExists);
+
+            if (!stackExists || stackExists === undefined) {
+                console.log("a");
+                const newStack: StackProp = await StackAPI.fetchTargetStack(res.stack);
+
+                addCardToAllStacksWithCards(res, newStack);
+                setShowInfoModal(true, 2);
+            } else {
+                console.log("b");
+                addCardToAllStacksWithCards(res);
+            }
+
+            addToFlashcardStore(res);
+            // reset input field
+            setNewFlashcard({
+                _id: "",
+                front_title: "",
+                front_text: "",
+                back_title: "",
+                back_text: "",
+                stack: "",
+            });
+
+            // HIDE modal; SHOW add-vocab-button
             setFlashcardFormModal(false);
             setAddFlashcardButton(true);
-            const stackExists = allStacksWithCards.find(stack => stack._id === newFlashcard.stack);
-            if (!stackExists) {
-                setShowInfoModal(true, 2);
-            }
         } catch (err) {
             console.error(err);
         }
