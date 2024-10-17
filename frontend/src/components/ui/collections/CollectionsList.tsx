@@ -6,7 +6,9 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 export default function CollectionsList() {
-    const { allStacksWithCards, removeAllFlashcardsFromStack, removeStack } = useFlashcardsStore(state => state);
+    const removeAllFlashcardsFromStack = useFlashcardsStore(state => state.removeAllFlashcardsFromStack);
+    const removeStack = useFlashcardsStore(state => state.removeStack);
+    const allStacksWithCards = useFlashcardsStore(state => state.allStacksWithCards);
     const renameStack = useFlashcardsStore(state => state.renameStack);
     const [showAskDelete, setShowAskDelete] = useState<string | null>("");
     const [editTargetStack, setEditTargetStack] = useState<string | null>("");
