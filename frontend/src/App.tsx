@@ -4,7 +4,7 @@ import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
 import useButtonStore from "./store/buttonStore";
 import useModalStore from "./store/modalStore";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
@@ -14,9 +14,10 @@ import Profile from "./components/ui/profile/Profile.tsx";
 
 export default function App() {
     const [isLoading] = useFetchData();
-    const { allFlashcards, allStacksWithCards, removeAllFlashcardsFromStack, removeStack } = useFlashcardsStore(
-        state => state
-    );
+    const allStacksWithCards = useFlashcardsStore(state => state.allStacksWithCards);
+    const allFlashcards = useFlashcardsStore(state => state.allFlashcards);
+    const removeAllFlashcardsFromStack = useFlashcardsStore(state => state.removeAllFlashcardsFromStack);
+    const removeStack = useFlashcardsStore(state => state.removeStack);
     const { ShowFlashcardFormModal, setFlashcardFormModal, ShowInfoModal } = useModalStore(state => state);
     const { ShowAddFlashcardButton, setAddFlashcardButton } = useButtonStore(state => state);
     const [showAskDelete, setShowAskDelete] = useState<string | null>("");
@@ -35,8 +36,6 @@ export default function App() {
             console.error(error);
         }
     };
-
-    useEffect(() => {}, [allStacksWithCards]);
 
     return (
         <main className="relative h-screen">
@@ -68,7 +67,7 @@ export default function App() {
             <section className="relative w-5/6 mx-auto my-0 mt-5">
                 <LatestVocab flashcards={allFlashcards} />
             </section>
-            {allStacksWithCards && (
+            {allStacksWithCards.length >= 1 && (
                 <ul className="w-4/5 max-h-60 mx-auto mt-5 border-2 border-red-400 overflow-y-auto">
                     {allStacksWithCards.map((stack, i) => (
                         <li
