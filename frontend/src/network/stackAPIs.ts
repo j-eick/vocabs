@@ -14,6 +14,24 @@ export async function fetchAllStacks() {
     }
 }
 
+export async function fetchTargetStack(stackID: string) {
+    let res;
+
+    try {
+        res = await fetch(`/api/stacks/${stackID}`, {
+            method: "GET",
+        });
+
+        if (res.ok) {
+            return await res.json();
+        } else {
+            throw new Error("Error while attempting to populate frontend with target stack.");
+        }
+    } catch (error) {
+        console.error("Error while trying to fetch target stack. " + error);
+    }
+}
+
 // TODO: createStack needs to be passed the newStack; need to create stack via form/dropdown
 export async function createStack() {
     let res;
