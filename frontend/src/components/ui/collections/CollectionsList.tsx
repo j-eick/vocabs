@@ -4,6 +4,7 @@ import * as StackAPI from "../../../network/stackAPIs.ts";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Icon from "../icon/Icon.tsx";
 
 export default function CollectionsList() {
     const removeAllFlashcardsFromStack = useFlashcardsStore(state => state.removeAllFlashcardsFromStack);
@@ -15,7 +16,8 @@ export default function CollectionsList() {
     const [showInputModal, setShowInputModal] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState<string>("");
 
-    const handleAskDeleteStack = (stack: StackProp) => {
+    const handleAskDeleteStack = (e: MouseEvent<SVGElement>, stack: StackProp) => {
+        e.stopPropagation();
         setShowAskDelete(stack._id);
     };
 
@@ -30,7 +32,7 @@ export default function CollectionsList() {
         }
     };
 
-    const handleShowModalEditStack = (e: MouseEvent<SVGElement, MouseEvent> | TouchEvent, stack: StackProp) => {
+    const handleShowModalEditStack = (e: MouseEvent<SVGElement> | TouchEvent, stack: StackProp) => {
         console.log(stack);
         setEditTargetStack(stack._id);
         e.stopPropagation();
@@ -78,15 +80,12 @@ export default function CollectionsList() {
                         >
                             <p className="flex justify-evenly gap-2 ">
                                 {stack.name}, {`ID: ${stack._id.slice(stack._id.length - 3)}`}
-                                <MdOutlineDeleteOutline
-                                    className="cursor-pointer"
-                                    onClick={e => {
-                                        handleAskDeleteStack(stack);
-                                        e.stopPropagation();
-                                    }}
+                                <Icon
+                                    icon={MdOutlineDeleteOutline}
+                                    onClick={e => handleAskDeleteStack(e, stack)}
                                 />
-                                <BsThreeDotsVertical
-                                    className=""
+                                <Icon
+                                    icon={BsThreeDotsVertical}
                                     onClick={e => handleShowModalEditStack(e, stack)}
                                 />
                             </p>
