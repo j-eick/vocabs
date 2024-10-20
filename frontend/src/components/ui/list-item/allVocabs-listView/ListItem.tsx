@@ -1,7 +1,7 @@
-import { FlashcardProp } from "../../../types/flashcard";
+import { FlashcardProp } from "../../../../types/flashcard";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import * as FlashcardApi from "../../../network/flashcard_apis";
-import useFlashcardsStore from "../../../store/flashcardStore";
+import * as FlashcardApi from "../../../../network/flashcard_apis";
+import useFlashcardsStore from "../../../../store/flashcardStore";
 
 type ListItemProp = {
     flashcard: FlashcardProp;
