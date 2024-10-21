@@ -13,7 +13,7 @@ type ModalProps = {
 export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps) {
     const { allStacksWithCards } = useFlashcardsStore(state => state);
     const [stackDropDownValue, setStackDropDownValue] = useState("");
-    const [stackValue, setStackValue] = useState("");
+    const [selectedCollection, setSelectedCollection] = useState<string>("");
 
     const ref = useRef<HTMLDivElement>(null);
     useClickOutside(ref, onClickOutside);
@@ -25,12 +25,6 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
         setStackDropDownValue(selectedStackID);
     }
 
-    function handleCollectionClicked(stack: StackProp) {
-        // console.log(stack._id);
-
-        setStackValue(stack._id);
-    }
-
     return (
         show && (
             <div
@@ -39,7 +33,7 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
             >
                 <div
                     ref={ref}
-                    className="w-4/5 mx-auto flex flex-col gap-5 border border-green-500"
+                    className="w-4/5 mx-auto flex flex-col gap-5"
                 >
                     {allStacksWithCards.length !== 0 ? (
                         <div className="min-h-32 flex flex-col p-4 rounded-xl bg-zinc-200">
@@ -47,16 +41,21 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
                             {allStacksWithCards.length <= 3 ? (
                                 <ul
                                     className={`w-full mx-auto p-4
-                                            flex gap-2 justify-center
-                                          `}
+                                                flex gap-2 justify-center`}
                                 >
                                     {allStacksWithCards.map(stack => (
                                         <li
                                             key={stack._id}
-                                            className={`p-1 border border-slate-800 ${
-                                                stackValue === stack._id ? "border-white" : ""
-                                            }`}
-                                            onClick={() => handleCollectionClicked(stack)}
+                                            className={`p-1 border border-slate-800 
+                                                    ${selectedCollection === stack._id ? "border-white" : ""}
+                                                `}
+                                            onClick={() => {
+                                                if (selectedCollection === stack._id) {
+                                                    setSelectedCollection("");
+                                                } else {
+                                                    setSelectedCollection(stack._id);
+                                                }
+                                            }}
                                         >
                                             {stack.name}
                                         </li>
@@ -93,7 +92,7 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
                         <div className="pb-5">
                             <CreateNewVocab
                                 onClickOutside={onClickOutside}
-                                dropdownValue={stackDropDownValue || stackValue}
+                                dropdownValue={stackDropDownValue || selectedCollection}
                             />
                         </div>
                     </div>
