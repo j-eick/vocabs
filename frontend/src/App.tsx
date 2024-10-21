@@ -9,7 +9,6 @@ import { StackProp } from "./types/stack";
 import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
 import InfoModal from "./components/ui/modal/InfoModal.tsx";
-import Nav from "./components/ui/Nav.tsx";
 import Profile from "./components/ui/profile/Profile.tsx";
 
 export default function App() {
@@ -38,7 +37,7 @@ export default function App() {
     };
 
     return (
-        <main className="relative h-screen">
+        <div className="relative">
             {ShowInfoModal && (
                 <InfoModal
                     className="w-4/5 p-3 z-50 rounded-lg border-none bg-blue-300"
@@ -121,17 +120,7 @@ export default function App() {
                 show={ShowFlashcardFormModal}
                 onClickOutside={() => setFlashcardFormModal(false)}
             />
-
-            {ShowAddFlashcardButton && (
-                <Nav
-                    navItems={[
-                        { path: "/", name: "Dashboard", active: true },
-                        { path: "/study", name: "Session", active: false },
-                        { path: "/allVocabs", name: "Collection", active: false },
-                    ]}
-                />
-            )}
-        </main>
+        </div>
     );
 
     type LatestVocabProps = {
