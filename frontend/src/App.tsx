@@ -83,6 +83,7 @@ export default function App() {
                                     }}
                                 />
                             </p>
+                            <p>{`Number of flashcards: ${stack.flashcards.length}`}</p>
                             {showAskDelete === stack._id && (
                                 <div className="flex-col bg-red-300">
                                     <span>
@@ -111,7 +112,6 @@ export default function App() {
                                     </div>
                                 </div>
                             )}
-                            <p>{`Number of flashcards: ${stack.flashcards.length}`}</p>
                         </li>
                     ))}
                 </ul>
