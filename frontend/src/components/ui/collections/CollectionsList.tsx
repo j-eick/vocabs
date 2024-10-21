@@ -14,6 +14,7 @@ export default function CollectionsList() {
     const renameStack = useFlashcardsStore(state => state.renameStack);
     const [showAskDelete, setShowAskDelete] = useState<string | null>("");
     const [targetStack_Modal, setTargetStack_Modal] = useState<string>("");
+    const [showTargetStack_Modal, setShowTargetStack_Modal] = useState<boolean>(false);
     const [isInputOpen, setIsInputOpen] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState<string>("");
     const [editInput_Modal, setEditInput_Modal] = useState<StackProp>({
@@ -27,6 +28,7 @@ export default function CollectionsList() {
 
     const handleShowModalEditStack = (e: MouseEvent<SVGElement> | TouchEvent, stack: StackProp) => {
         setTargetStack_Modal(stack._id);
+        setShowTargetStack_Modal(true);
         console.log(stack._id);
         e.stopPropagation();
     };
@@ -110,15 +112,17 @@ export default function CollectionsList() {
                                         className={`absolute w-full h-full animate-fadeIn`}
                                         blur="smm"
                                         color="blue"
+                                        show={showTargetStack_Modal}
+                                        onClickOutside={() => setShowTargetStack_Modal(false)}
                                         content={
                                             <div
                                                 className={`flex h-full 
                                                         rounded-xl text-white`}
                                             >
                                                 <button
-                                                    className={`w-1/2 grid place-items-center text-lg leading-5" ${
-                                                        isInputOpen ? "text-slate-300" : "text-white"
-                                                    }`}
+                                                    className={`w-1/2 grid place-items-center text-lg leading-5" 
+                                                                ${isInputOpen ? "text-slate-300" : "text-white"}
+                                                            `}
                                                     onClick={e => handleEditStack(e, stack)}
                                                 >
                                                     change name
