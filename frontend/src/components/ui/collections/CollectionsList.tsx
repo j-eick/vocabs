@@ -7,6 +7,15 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Icon from "../icon/Icon.tsx";
 import { BlurredModal } from "../modal/BlurredModal.tsx";
 
+const initialInputValue = {
+    _id: "",
+    name: "",
+    description: "",
+    flashcards: [],
+    createdAt: "",
+    updatedAt: "",
+};
+
 export default function CollectionsList() {
     const removeAllFlashcardsFromStack = useFlashcardsStore(state => state.removeAllFlashcardsFromStack);
     const removeStack = useFlashcardsStore(state => state.removeStack);
@@ -15,16 +24,9 @@ export default function CollectionsList() {
     const [showAskDelete, setShowAskDelete] = useState<string | null>("");
     const [targetStack_Modal, setTargetStack_Modal] = useState<string>("");
     const [showTargetStack_Modal, setShowTargetStack_Modal] = useState<boolean>(false);
-    const [isInputOpen, setIsInputOpen] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState<string>("");
-    const [editInput_Modal, setEditInput_Modal] = useState<StackProp>({
-        _id: "",
-        name: "",
-        description: "",
-        flashcards: [],
-        createdAt: "",
-        updatedAt: "",
-    });
+    const [editInput_Modal, setEditInput_Modal] = useState<StackProp>(initialInputValue);
+    const [isInputOpen, setIsInputOpen] = useState(false);
 
     const handleShowModalEditStack = (e: MouseEvent<SVGElement> | TouchEvent, stack: StackProp) => {
         setTargetStack_Modal(stack._id);
@@ -84,15 +86,15 @@ export default function CollectionsList() {
             {allStacksWithCards && (
                 <>
                     <ul
-                        className={`px-2 h-28 mx-auto
-                                flex gap-2 overflow-x-auto`}
+                        className={`px-4 h-36 mx-auto
+                                    flex items-center gap-2 overflow-x-auto 
+                                    bg-slate-100`}
                     >
                         {allStacksWithCards.map((stack, i) => (
                             <li
                                 key={i}
-                                className={`relative p-3 h-24 min-w-44 
-                                        grid grid-cols-10 overflow-hidden
-                                        bg-slate-300 rounded-xl shadow-22
+                                className={`relative p-3 h-24 min-w-44 grid grid-cols-10 overflow-hidden
+                                        bg-slate-300 rounded-xl shadow-22 text-left
                                         hover:bg-slate-200`}
                             >
                                 <div className="px-2 col-span-8 flex flex-col justify-evenly">
@@ -113,7 +115,10 @@ export default function CollectionsList() {
                                         blur="smm"
                                         color="blue"
                                         show={showTargetStack_Modal}
-                                        onClickOutside={() => setShowTargetStack_Modal(false)}
+                                        onClickOutside={() => {
+                                            setIsInputOpen(false);
+                                            setShowTargetStack_Modal(false);
+                                        }}
                                         content={
                                             <div
                                                 className={`flex h-full 
@@ -209,7 +214,10 @@ export default function CollectionsList() {
                             blur="smm"
                             color="blue"
                             show={isInputOpen}
-                            onClickOutside={() => setIsInputOpen(false)}
+                            onClickOutside={() => {
+                                setIsInputOpen(false);
+                                setShowTargetStack_Modal(false);
+                            }}
                             content={
                                 <form
                                     className="py-1 flex flex-col gap-4 text-white text-xl animate-fadeIn"
