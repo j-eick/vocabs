@@ -1,6 +1,6 @@
 import useFlashcardsStore from "./store/flashcardStore";
 import { FlashcardProp } from "./types/flashcard";
-import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg";
+import FormModal_blurredBg from "./components/ui/modal/Form_ModalblurredBg.tsx";
 import useButtonStore from "./store/buttonStore";
 import useModalStore from "./store/modalStore";
 import { MdOutlineDeleteOutline } from "react-icons/md";

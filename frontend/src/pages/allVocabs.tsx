@@ -1,5 +1,5 @@
 import useFlashcardsStore from "../store/flashcardStore";
-import ListItem from "../components/ui/list-item-allVocabs/ListItem";
+import ListItem from "../components/ui/list-item/allVocabs-listView/ListItem";
 import Nav from "../components/ui/Nav";
 import CollectionsList from "../components/ui/collections/CollectionsList";
 
@@ -7,11 +7,11 @@ export default function AllVocabsPage() {
     const allFlashcards = useFlashcardsStore(state => state.allFlashcards);
 
     return (
-        <main className="relative pt-8">
+        <main className="relative h-full pt-4 pb-10 flex flex-col gap-5">
             <CollectionsList />
             <ul
                 role="list"
-                className="w-5/6 mx-auto mb-24"
+                className="pt-2 pb-4 w-5/6 mx-auto overflow-auto"
             >
                 {allFlashcards.length >= 1 ? (
                     allFlashcards.map(card => (
