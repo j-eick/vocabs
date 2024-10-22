@@ -1,7 +1,7 @@
 import useFlashcardsStore from "../../../store/flashcardStore";
 import { StackProp } from "../../../types/stack";
 import * as StackAPI from "../../../network/stackAPIs.ts";
-import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
+import { ChangeEvent, Dispatch, FormEvent, MouseEvent, SetStateAction, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Icon from "../icon/Icon.tsx";
@@ -16,7 +16,12 @@ const initialInputValue = {
     updatedAt: "",
 };
 
-export default function CollectionsList() {
+type CollectionsListProps = {
+    selectedCollection: StackProp | null;
+    setSelectedCollection: Dispatch<SetStateAction<StackProp | null>>;
+};
+
+export default function CollectionsList({ selectedCollection, setSelectedCollection }: CollectionsListProps) {
     const removeAllFlashcardsFromStack = useFlashcardsStore(state => state.removeAllFlashcardsFromStack);
     const removeStack = useFlashcardsStore(state => state.removeStack);
     const allStacksWithCards = useFlashcardsStore(state => state.allStacksWithCards);
@@ -94,8 +99,20 @@ export default function CollectionsList() {
                             <li
                                 key={i}
                                 className={`relative p-3 h-24 min-w-44 grid grid-cols-10 overflow-hidden
-                                        bg-slate-300 rounded-xl shadow-22 text-left
-                                        hover:bg-slate-200`}
+                                        bg-mattBlue rounded-xl shadow-22 text-left
+                                        ${
+                                            selectedCollection?._id === stack._id
+                                                ? "border-3 border-white bg-mattBlue2"
+                                                : ""
+                                        }
+                                        hover:bg-mattBlue2`}
+                                onClick={() => {
+                                    if (selectedCollection?._id === stack._id) {
+                                        setSelectedCollection(null);
+                                    } else {
+                                        setSelectedCollection(stack);
+                                    }
+                                }}
                             >
                                 <div className="px-2 col-span-8 flex flex-col justify-evenly">
                                     <h1 className="text-lg font-semibold text-left">{stack.name}</h1>
@@ -143,35 +160,6 @@ export default function CollectionsList() {
                                         }
                                     />
                                 )}
-                                {/* {editInput_Modal._id === stack._id && (
-                                    <BlurredModal
-                                        className="absolute w-full h-full animate-fadeIn"
-                                        content={
-                                            <form
-                                                className="absolute z-50 inset-0 p-2  bg-slate-300 text-black animate-fadeIn"
-                                                action="patch"
-                                                onSubmit={e => handleNewCollectionNameSubmit(e, stack)}
-                                            >
-                                                <label htmlFor="renameCollection">Pick new name</label>
-                                                <input
-                                                    id="renameCollection"
-                                                    type="text"
-                                                    name="name"
-                                                    value={newCollectionName}
-                                                    onChange={e => inputFieldHandler(e)}
-                                                    autoComplete="off"
-                                                    className="px-2 py-1 bg-slate-300 text-slate-800"
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    className="bg-slate-400 rounded-xl"
-                                                >
-                                                    Send
-                                                </button>
-                                            </form>
-                                        }
-                                    />
-                                )} */}
                                 {/* MODAL: Really delete this stack with all cards? */}
                                 {showAskDelete === stack._id && (
                                     <div className="flex-col bg-red-300">
