@@ -12,10 +12,17 @@ export default {
                 smmm: "10px",
                 kl: "14px",
             },
+            borderWidth: {
+                3: "3px",
+            },
             boxShadow: {
                 bottomRight: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
                 line: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
                 22: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            },
+            colors: {
+                mattBlue: "#6A9AB0",
+                mattBlue2: "#7cb5ce",
             },
             keyframes: {
                 fadeIn: {
