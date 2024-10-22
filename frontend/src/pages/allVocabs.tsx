@@ -1,33 +1,40 @@
 import useFlashcardsStore from "../store/flashcardStore";
 import ListItem from "../components/ui/list-item/allVocabs-listView/ListItem";
 import CollectionsList from "../components/ui/collections/CollectionsList";
+import { StackProp } from "../types/stack";
+import { useEffect, useState } from "react";
+import { FlashcardProp } from "../types/flashcard";
 
 export default function AllVocabsPage() {
-    const allFlashcards = useFlashcardsStore(state => state.allFlashcards);
+    const allFlashcards: FlashcardProp[] = useFlashcardsStore(state => state.allFlashcards);
+    const [selectedCollection, setSelectedCollection] = useState<StackProp | null>(null);
+
+    const filterFlashcards = allFlashcards.filter(card => card.stack === selectedCollection?._id);
 
     return (
         <div className="relative h-full pb-10">
-            <CollectionsList />
+            <CollectionsList
+                selectedCollection={selectedCollection}
+                setSelectedCollection={setSelectedCollection}
+            />
             <ul
                 role="list"
                 className={`pt-2 pb-4 w-5/6 mx-auto 
                             overflow-auto text-left`}
             >
-                {allFlashcards.length >= 1 ? (
-                    allFlashcards.map(card => (
-                        <ListItem
-                            key={card._id}
-                            flashcard={card}
-                        />
-                    ))
-                ) : (
-                    <>
-                        <p className="mb-10">
-                            You don't have one single flashcard yet. Work up! <br /> <br /> Head over to Dashboard and
-                            create your first flashcard.
-                        </p>
-                    </>
-                )}
+                {selectedCollection === null
+                    ? allFlashcards.map(card => (
+                          <ListItem
+                              key={card._id}
+                              flashcard={card}
+                          />
+                      ))
+                    : filterFlashcards.map(card => (
+                          <ListItem
+                              key={card._id}
+                              flashcard={card}
+                          />
+                      ))}
             </ul>
         </div>
     );
