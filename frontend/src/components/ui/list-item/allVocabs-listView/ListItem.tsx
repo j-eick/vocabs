@@ -15,7 +15,9 @@ export default function ListItem({ flashcard }: ListItemProp) {
         const result = _id.slice(_id.length - 3);
         return result;
     };
+
     const stackID = (stack: string) => {
+        if (!stack) return "N/A";
         return stack.slice(stack.length - 3);
     };
 
