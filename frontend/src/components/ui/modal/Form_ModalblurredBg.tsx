@@ -3,7 +3,6 @@ import useFlashcardsStore from "../../../store/flashcardStore";
 import Dropdown from "../dropdown-menu/Dropdown";
 import { ChangeEvent, useRef, useState } from "react";
 import { useClickOutside } from "../../../utils/clickOutside";
-import { StackProp } from "../../../types/stack";
 
 type ModalProps = {
     show: boolean;
@@ -33,7 +32,7 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
             >
                 <div
                     ref={ref}
-                    className="w-4/5 mx-auto flex flex-col gap-5"
+                    className="w-4/5 mx-auto flex flex-col gap-5 border-4"
                 >
                     {allStacksWithCards.length !== 0 ? (
                         <div className="min-h-32 flex flex-col p-4 rounded-xl bg-zinc-200">
@@ -90,10 +89,7 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
                                     rounded-xl bg-zinc-200`}
                     >
                         <div className="pb-5">
-                            <CreateNewVocab
-                                onClickOutside={onClickOutside}
-                                dropdownValue={stackDropDownValue || selectedCollection}
-                            />
+                            <CreateNewVocab dropdownValue={stackDropDownValue || selectedCollection} />
                         </div>
                     </div>
                 </div>
