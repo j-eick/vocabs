@@ -250,6 +250,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                     className="border"
                                     onClick={e => {
                                         setShowAskDelete("");
+                                        setIsDeleteModalOpen(false);
                                         e.stopPropagation();
                                     }}
                                 >
