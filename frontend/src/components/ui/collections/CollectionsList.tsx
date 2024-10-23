@@ -7,15 +7,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Icon from "../icon/Icon.tsx";
 import { BlurredModal } from "../modal/BlurredModal.tsx";
 
-const initialInputValue = {
-    _id: "",
-    name: "",
-    description: "",
-    flashcards: [],
-    createdAt: "",
-    updatedAt: "",
-};
-
 type CollectionsListProps = {
     selectedCollection: StackProp | null;
     setSelectedCollection: Dispatch<SetStateAction<StackProp | null>>;
@@ -26,29 +17,20 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
     const removeStack = useFlashcardsStore(state => state.removeStack);
     const allStacksWithCards = useFlashcardsStore(state => state.allStacksWithCards);
     const renameStack = useFlashcardsStore(state => state.renameStack);
-    const [showAskDelete, setShowAskDelete] = useState<string | null>("");
-    const [targetStack_Modal, setTargetStack_Modal] = useState<string>("");
-    const [showTargetStack_Modal, setShowTargetStack_Modal] = useState<boolean>(false);
+    const [targetRenameDelete_Modal, setTargetRenameDelete_Modal] = useState<string>("");
+    const [showRenameDelete_Modal, setShowRenameDelete_Modal] = useState<boolean>(false);
     const [newCollectionName, setNewCollectionName] = useState<string>("");
-    const [editInput_Modal, setEditInput_Modal] = useState<StackProp>(initialInputValue);
+    // Modals: Input & Delete
+    const [showInput_Modal, setShowInput_Modal] = useState<StackProp | null>(null);
     const [isInputOpen, setIsInputOpen] = useState(false);
-
-    const handleShowModalEditStack = (e: MouseEvent<SVGElement> | TouchEvent, stack: StackProp) => {
-        setTargetStack_Modal(stack._id);
-        setShowTargetStack_Modal(true);
-        console.log(stack._id);
-        e.stopPropagation();
-    };
-
-    const handleEditStack = (e: MouseEvent, stack: StackProp) => {
-        setEditInput_Modal(stack);
-        setIsInputOpen(true);
-        e.stopPropagation();
-    };
+    const [showAskDelete, setShowAskDelete] = useState<string | null>("");
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const inputFieldHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setNewCollectionName(value);
+
+        console.log(newCollectionName);
     };
 
     const handleNewCollectionNameSubmit = async (e: FormEvent<HTMLFormElement>, stack: StackProp) => {
@@ -58,12 +40,11 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
             const res = await StackAPI.renameStack(StackID, newCollectionName);
             if (res) {
                 renameStack(stack._id, newCollectionName);
-                // setEditInputModal(false);
-                setTargetStack_Modal("");
                 setNewCollectionName("");
-                setEditInput_Modal("");
+                setTargetRenameDelete_Modal("");
+                setShowInput_Modal(null);
             } else {
-                console.log("b");
+                console.error("Could not rename collection.");
             }
         } catch (error) {
             console.error("Error while attemtping to change name of collection: " + error);
@@ -71,8 +52,10 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
     };
 
     const handleAskDeleteStack = (e: MouseEvent<SVGElement>, stack: StackProp) => {
-        e.stopPropagation();
+        setIsDeleteModalOpen(true);
         setShowAskDelete(stack._id);
+        setSelectedCollection(stack);
+        e.stopPropagation();
     };
 
     const handleConfirmDelete = async (stack: StackProp) => {
@@ -81,6 +64,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
             removeAllFlashcardsFromStack(stack._id);
             removeStack(stack._id);
             setShowAskDelete(null);
+            setIsDeleteModalOpen(false);
         } catch (error) {
             console.error(error);
         }
@@ -93,7 +77,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                     <ul
                         className={`px-4 h-36 mx-auto
                                     flex items-center gap-2 overflow-x-auto 
-                                    bg-slate-100`}
+                                    bg-slate-300`}
                     >
                         {allStacksWithCards.map((stack, i) => (
                             <li
@@ -102,7 +86,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                         bg-mattBlue rounded-xl shadow-22 text-left
                                         ${
                                             selectedCollection?._id === stack._id
-                                                ? "border-3 border-white bg-mattBlue2"
+                                                ? "border-2 border-white bg-mattBlue2"
                                                 : ""
                                         }
                                         hover:bg-mattBlue2`}
@@ -122,19 +106,24 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                 <div className="col-span-2 flex justify-end items-center">
                                     <Icon
                                         icon={BsThreeDotsVertical}
-                                        onClick={e => handleShowModalEditStack(e, stack)}
+                                        onClick={e => {
+                                            setTargetRenameDelete_Modal(stack._id);
+                                            setShowRenameDelete_Modal(true);
+                                            e.stopPropagation();
+                                            console.log(stack._id);
+                                        }}
                                         className="cursor-pointer"
                                     />
                                 </div>
-                                {targetStack_Modal === stack._id && (
+                                {targetRenameDelete_Modal === stack._id && (
                                     <BlurredModal
                                         className={`absolute w-full h-full animate-fadeIn`}
                                         blur="smm"
                                         color="blue"
-                                        show={showTargetStack_Modal}
+                                        show={showRenameDelete_Modal}
                                         onClickOutside={() => {
                                             setIsInputOpen(false);
-                                            setShowTargetStack_Modal(false);
+                                            setShowRenameDelete_Modal(false);
                                         }}
                                         content={
                                             <div
@@ -143,74 +132,59 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                             >
                                                 <button
                                                     className={`w-1/2 grid place-items-center text-lg leading-5" 
-                                                                ${isInputOpen ? "text-slate-300" : "text-white"}
+                                                                ${
+                                                                    isInputOpen
+                                                                        ? "text-slate-200 opacity-40"
+                                                                        : "text-slate-200"
+                                                                }
                                                             `}
-                                                    onClick={e => handleEditStack(e, stack)}
+                                                    onClick={e => {
+                                                        // handleEditStack(e, stack);
+                                                        setShowInput_Modal(stack);
+                                                        setIsInputOpen(true);
+                                                        console.log(stack._id);
+                                                        e.stopPropagation();
+                                                    }}
                                                 >
                                                     change name
                                                 </button>
-                                                <div className="w-1/2 h-full grid place-items-center">
+                                                <div className={`w-1/2 h-full grid place-items-center`}>
                                                     <Icon
-                                                        className="text-2xl cursor-pointer"
+                                                        className={`text-2xl cursor-pointer 
+                                                                    ${
+                                                                        isDeleteModalOpen
+                                                                            ? "text-slate-200 opacity-40"
+                                                                            : "text-slate-200"
+                                                                    }`}
                                                         icon={MdOutlineDeleteOutline}
-                                                        onClick={e => handleAskDeleteStack(e, stack)}
+                                                        onClick={e => {
+                                                            handleAskDeleteStack(e, stack);
+                                                            setIsDeleteModalOpen(true);
+                                                            setShowAskDelete(stack._id);
+                                                            setSelectedCollection(stack);
+                                                            e.stopPropagation();
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
                                         }
                                     />
                                 )}
-                                {/* MODAL: Really delete this stack with all cards? */}
-                                {showAskDelete === stack._id && (
-                                    <div className="flex-col bg-red-300">
-                                        <span>
-                                            Are you sure? <br />{" "}
-                                            <span className="text-xs">
-                                                (Stack incl. all its cards will be deleted.)
-                                            </span>
-                                        </span>
-                                        <div className="flex gap-1 justify-center">
-                                            <button
-                                                className="border"
-                                                onClick={e => {
-                                                    handleConfirmDelete(stack);
-                                                    e.stopPropagation();
-                                                }}
-                                            >
-                                                yes
-                                            </button>
-                                            <button
-                                                className="border"
-                                                onClick={e => {
-                                                    setShowAskDelete("");
-                                                    e.stopPropagation();
-                                                }}
-                                            >
-                                                no
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
                             </li>
                         ))}
                     </ul>
-                    {editInput_Modal._id && (
+                    {isInputOpen && showInput_Modal?._id && (
                         <BlurredModal
                             className={`absolute z-10 w-5/6 h-max py-3
-                                        mx-auto left-1/2 -translate-x-1/2 rounded-2xl
+                                        mx-auto left-1/2 -translate-x-1/2 rounded-2xl bottom-5
                                         animate-fadeIn`}
                             blur="smm"
                             color="blue"
                             show={isInputOpen}
-                            onClickOutside={() => {
-                                setIsInputOpen(false);
-                                setShowTargetStack_Modal(false);
-                            }}
                             content={
                                 <form
-                                    className="py-1 flex flex-col gap-4 text-white text-xl animate-fadeIn"
-                                    action="patch"
-                                    onSubmit={e => handleNewCollectionNameSubmit(e, editInput_Modal)}
+                                    className={`py-1 flex flex-col gap-4 text-white text-xl animate-fadeIn`}
+                                    onSubmit={e => handleNewCollectionNameSubmit(e, showInput_Modal)}
                                 >
                                     <label htmlFor="renameCollection">Choose new name</label>
                                     <input
@@ -233,6 +207,42 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                 </form>
                             }
                         />
+                    )}
+                    {/* MODAL: Really delete this stack with all cards? */}
+                    {showAskDelete === selectedCollection?._id && (
+                        <div
+                            className="absolute z-10 w-5/6 h-max py-3 
+                                        mx-auto left-1/2 -translate-x-1/2 rounded-2xl
+                                        animate-fadeIn flex-col bg-red-300"
+                        >
+                            <span>
+                                <p>
+                                    Really delete your
+                                    <span className="font-semibold"> {selectedCollection.name} </span>collection?
+                                </p>
+                                <p className="text-xs">(Stack incl. all its cards will be deleted.)</p>
+                            </span>
+                            <div className="flex gap-1 justify-center">
+                                <button
+                                    className="border"
+                                    onClick={e => {
+                                        handleConfirmDelete(selectedCollection);
+                                        e.stopPropagation();
+                                    }}
+                                >
+                                    yes
+                                </button>
+                                <button
+                                    className="border"
+                                    onClick={e => {
+                                        setShowAskDelete("");
+                                        e.stopPropagation();
+                                    }}
+                                >
+                                    no
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </>
             )}
