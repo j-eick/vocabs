@@ -118,7 +118,10 @@ export default function App() {
             )}
             <FormModal_blurredBg
                 show={ShowFlashcardFormModal}
-                onClickOutside={() => setFlashcardFormModal(false)}
+                onClickOutside={() => {
+                    setFlashcardFormModal(false);
+                    setAddFlashcardButton(true);
+                }}
             />
         </div>
     );
