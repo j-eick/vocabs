@@ -2,7 +2,7 @@ import useFlashcardsStore from "../store/flashcardStore";
 import ListItem from "../components/ui/list-item/allVocabs-listView/ListItem";
 import CollectionsList from "../components/ui/collections/CollectionsList";
 import { StackProp } from "../types/stack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlashcardProp } from "../types/flashcard";
 
 export default function AllVocabsPage() {
@@ -13,16 +13,21 @@ export default function AllVocabsPage() {
 
     return (
         <div className="relative h-full pb-10">
-            <CollectionsList
-                selectedCollection={selectedCollection}
-                setSelectedCollection={setSelectedCollection}
-            />
+            {allFlashcards.length >= 1 && (
+                <CollectionsList
+                    selectedCollection={selectedCollection}
+                    setSelectedCollection={setSelectedCollection}
+                />
+            )}
             <ul
                 role="list"
                 className={`pt-2 pb-4 w-5/6 mx-auto 
                             overflow-auto text-left`}
             >
-                {selectedCollection === null
+                // todo: create fallback, when there are any flashcards
+                {!allFlashcards.length
+                    ? "Start making flashcards."
+                    : selectedCollection === null
                     ? allFlashcards.map(card => (
                           <ListItem
                               key={card._id}
