@@ -22,7 +22,7 @@ export default {
             },
             colors: {
                 mattBlue: "#6A9AB0",
-                mattBlue2: "#7cb5ce",
+                mattBlue2: "#80b0c5",
             },
             keyframes: {
                 fadeIn: {

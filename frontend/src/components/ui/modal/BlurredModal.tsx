@@ -8,7 +8,7 @@ type BlurredModalProps = {
     trigger?: ReactNode;
     blur?: "smm" | "smmm" | "lg";
     brightness?: "80" | "90" | "95";
-    color?: "blue";
+    color?: "blue" | "mattBlue";
     onClickOutside?: () => void;
     show?: boolean;
 };
@@ -20,7 +20,11 @@ export const BlurredModal = ({
     color,
     className,
     show = true,
+    onClickOutside,
 }: BlurredModalProps) => {
+    const ref = useRef<HTMLDivElement | HTMLLIElement>(null);
+    useClickOutside(ref, onClickOutside);
+
     const blurIntensity = useMemo(() => {
         switch (blur) {
             case "smm":
@@ -48,6 +52,8 @@ export const BlurredModal = ({
         switch (color) {
             case "blue":
                 return "bg-blue-400/20";
+            case "mattBlue":
+                return "bg-mattBlue";
 
             default:
                 return "";
@@ -57,6 +63,7 @@ export const BlurredModal = ({
     return (
         show && (
             <div
+                ref={ref}
                 className={twMerge(
                     `px-4 py-3 
                     ${blurIntensity} ${backdropBrightness} ${backdropColor} ${className}`

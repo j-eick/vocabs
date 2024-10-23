@@ -32,7 +32,7 @@ export default function FormModal_blurredBg({ onClickOutside, show }: ModalProps
             >
                 <div
                     ref={ref}
-                    className="w-4/5 mx-auto flex flex-col gap-5 border-4"
+                    className="w-4/5 mx-auto flex flex-col gap-5"
                 >
                     {allStacksWithCards.length !== 0 ? (
                         <div className="min-h-32 flex flex-col p-4 rounded-xl bg-zinc-200">
