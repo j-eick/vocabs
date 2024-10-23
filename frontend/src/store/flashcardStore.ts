@@ -81,8 +81,8 @@ const useFlashcardsStore = create<State & Actions>()(
             removeFlashcardStore: flashcardIDtoRemove =>
                 set((state: Draft<State>) => {
                     state.allFlashcards = state.allFlashcards.filter(card => card._id !== flashcardIDtoRemove);
-                    state.allStacksWithCards = state.allStacksWithCards.filter(stack =>
-                        stack.flashcards.map(card => card._id !== flashcardIDtoRemove)
+                    state.allStacksWithCards.forEach(
+                        stack => (stack.flashcards = stack.flashcards.filter(card => card._id !== flashcardIDtoRemove))
                     );
                 }),
 

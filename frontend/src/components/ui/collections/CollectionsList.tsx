@@ -51,13 +51,6 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
         }
     };
 
-    const handleAskDeleteStack = (e: MouseEvent<SVGElement>, stack: StackProp) => {
-        setIsDeleteModalOpen(true);
-        setShowAskDelete(stack._id);
-        setSelectedCollection(stack);
-        e.stopPropagation();
-    };
-
     const handleConfirmDelete = async (stack: StackProp) => {
         try {
             await StackAPI.deleteStackWithCards(stack._id, true);
@@ -158,7 +151,6 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                                                     }`}
                                                         icon={MdOutlineDeleteOutline}
                                                         onClick={e => {
-                                                            handleAskDeleteStack(e, stack);
                                                             setIsDeleteModalOpen(true);
                                                             setShowAskDelete(stack._id);
                                                             setSelectedCollection(stack);
