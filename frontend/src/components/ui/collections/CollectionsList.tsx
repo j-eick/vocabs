@@ -1,11 +1,12 @@
 import useFlashcardsStore from "../../../store/flashcardStore";
 import { StackProp } from "../../../types/stack";
 import * as StackAPI from "../../../network/stackAPIs.ts";
-import { ChangeEvent, Dispatch, FormEvent, MouseEvent, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useRef, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Icon from "../icon/Icon.tsx";
 import { BlurredModal } from "../modal/BlurredModal.tsx";
+import { useClickOutside } from "../../../utils/clickOutside.ts";
 
 type CollectionsListProps = {
     selectedCollection: StackProp | null;
@@ -26,11 +27,14 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
     const [showAskDelete, setShowAskDelete] = useState<string | null>("");
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+    const ref = useRef<HTMLUListElement>(null);
+    useClickOutside(ref, () => {
+        setSelectedCollection(null);
+    });
+
     const inputFieldHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setNewCollectionName(value);
-
-        console.log(newCollectionName);
     };
 
     const handleNewCollectionNameSubmit = async (e: FormEvent<HTMLFormElement>, stack: StackProp) => {
@@ -67,7 +71,9 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
         <div className="w-full">
             {allStacksWithCards && (
                 <>
+                    //todo: consider using an array of refs or mapping, to create a ref for every LI-element
                     <ul
+                        ref={ref}
                         className={`px-4 h-36 mx-auto
                                     flex items-center gap-2 overflow-x-auto 
                                     bg-slate-300`}
@@ -78,14 +84,20 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                 className={`relative p-3 h-24 min-w-44 grid grid-cols-10 overflow-hidden
                                         bg-mattBlue rounded-xl shadow-22 text-left
                                         ${
+                                            showRenameDelete_Modal
+                                                ? selectedCollection?._id !== stack._id &&
+                                                  "text-slate-500 pointer-events-none"
+                                                : "hover:bg-mattBlue2"
+                                        }
+                                        ${
                                             selectedCollection?._id === stack._id
                                                 ? "border-2 border-white bg-mattBlue2"
                                                 : ""
-                                        }
-                                        hover:bg-mattBlue2`}
+                                        }`}
                                 onClick={() => {
                                     if (selectedCollection?._id === stack._id) {
                                         setSelectedCollection(null);
+                                        console.log(selectedCollection?._id);
                                     } else {
                                         setSelectedCollection(stack);
                                     }
@@ -99,13 +111,15 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                 <div className="col-span-2 flex justify-end items-center">
                                     <Icon
                                         icon={BsThreeDotsVertical}
+                                        className={`cursor-pointer ${
+                                            selectedCollection?._id === stack._id ? "" : "hidden"
+                                        }`}
                                         onClick={e => {
                                             setTargetRenameDelete_Modal(stack._id);
                                             setShowRenameDelete_Modal(true);
                                             e.stopPropagation();
                                             console.log(stack._id);
                                         }}
-                                        className="cursor-pointer"
                                     />
                                 </div>
                                 {targetRenameDelete_Modal === stack._id && (
@@ -117,6 +131,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                         onClickOutside={() => {
                                             setIsInputOpen(false);
                                             setShowRenameDelete_Modal(false);
+                                            setSelectedCollection(null);
                                         }}
                                         content={
                                             <div
@@ -132,10 +147,8 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                                                 }
                                                             `}
                                                     onClick={e => {
-                                                        // handleEditStack(e, stack);
                                                         setShowInput_Modal(stack);
                                                         setIsInputOpen(true);
-                                                        console.log(stack._id);
                                                         e.stopPropagation();
                                                     }}
                                                 >
@@ -171,7 +184,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                         mx-auto left-1/2 -translate-x-1/2 rounded-2xl bottom-5
                                         animate-fadeIn`}
                             blur="smm"
-                            color="blue"
+                            color="mattBlue"
                             show={isInputOpen}
                             content={
                                 <form
@@ -195,6 +208,15 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
                                         className="py-1 bg-slate-400 rounded-lg"
                                     >
                                         Ok
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="py-1 border border-slate-500 rounded-lg text-slate-600"
+                                        onClick={() => {
+                                            setIsInputOpen(false);
+                                        }}
+                                    >
+                                        Cancel
                                     </button>
                                 </form>
                             }
