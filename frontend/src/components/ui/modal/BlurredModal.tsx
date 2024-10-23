@@ -20,14 +20,7 @@ export const BlurredModal = ({
     color,
     className,
     show = true,
-    onClickOutside,
 }: BlurredModalProps) => {
-    const ref = useRef<HTMLElement>(null);
-
-    // todo: "Uncaught TypeError: callback is not a function"
-    // BUT IT WORKS!!!
-    useClickOutside(ref, onClickOutside); // onClickOutside is set to optional; that's why squiggly line
-
     const blurIntensity = useMemo(() => {
         switch (blur) {
             case "smm":
@@ -64,10 +57,9 @@ export const BlurredModal = ({
     return (
         show && (
             <div
-                ref={ref}
                 className={twMerge(
                     `px-4 py-3 
-                ${blurIntensity} ${backdropBrightness} ${backdropColor} ${className} `
+                    ${blurIntensity} ${backdropBrightness} ${backdropColor} ${className}`
                 )}
             >
                 {content}
