@@ -24,7 +24,7 @@ export default function AllVocabsPage() {
                 className={`pt-2 pb-4 w-5/6 mx-auto 
                             overflow-auto text-left`}
             >
-                // todo: create fallback, when there are any flashcards
+                {/* // todo: create fallback, when there are any flashcards */}
                 {!allFlashcards.length
                     ? "Start making flashcards."
                     : selectedCollection === null
