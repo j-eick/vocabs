@@ -71,7 +71,7 @@ export default function CollectionsList({ selectedCollection, setSelectedCollect
         <div className="w-full">
             {allStacksWithCards && (
                 <>
-                    //todo: consider using an array of refs or mapping, to create a ref for every LI-element
+                    {/* //todo: consider using an array of refs or mapping, to create a ref for every LI-element */}
                     <ul
                         ref={ref}
                         className={`px-4 h-36 mx-auto
