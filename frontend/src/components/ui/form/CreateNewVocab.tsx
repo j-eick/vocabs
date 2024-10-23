@@ -17,12 +17,11 @@ export type NewFlashcard = {
 };
 
 type CreateNewVocab = {
-    onClickOutside: () => void;
     dropdownValue: string;
 };
 
 // INFO: Add Pending STate while flashcard is being created
-export default function CreateNewVocab({ onClickOutside, dropdownValue }: CreateNewVocab) {
+export default function CreateNewVocab({ dropdownValue }: CreateNewVocab) {
     const { setAddFlashcardButton } = useButtonStore(state => state);
     const { setFlashcardFormModal, setShowInfoModal } = useModalStore(state => state);
     const { addToFlashcardStore, allStacksWithCards, addCardToAllStacksWithCards } = useFlashcardsStore(state => state);
@@ -34,9 +33,6 @@ export default function CreateNewVocab({ onClickOutside, dropdownValue }: Create
         back_text: "",
         stack: "",
     });
-
-    const ref = useRef<HTMLDivElement>(null);
-    useClickOutside(ref, onClickOutside);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
