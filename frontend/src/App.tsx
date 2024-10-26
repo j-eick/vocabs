@@ -10,6 +10,7 @@ import * as StackAPI from "../src/network/stackAPIs.ts";
 import useFetchData from "./hooks/useFetchData.tsx";
 import InfoModal from "./components/ui/modal/InfoModal.tsx";
 import Profile from "./components/ui/profile/Profile.tsx";
+import Header from "./components/ui/header/Header.tsx";
 
 export default function App() {
     const [isLoading] = useFetchData();
@@ -44,7 +45,7 @@ export default function App() {
                     content={<p>New Stack was created</p>}
                 />
             )}
-            <div className="h-1/4 px-3 flex items-center justify-between bg-green-400">
+            <Header className="h-1/4 px-3 flex items-center justify-between bg-green-400">
                 <Profile className="" />
                 {/* BUTTON: CREATE NEW VOCAB */}
                 {ShowAddFlashcardButton && (
@@ -61,7 +62,7 @@ export default function App() {
                         Add Vocab
                     </button>
                 )}
-            </div>
+            </Header>
             {/* DASHBOARD ITEMS */}
             <section className="relative w-5/6 mx-auto my-0 mt-5">
                 <LatestVocab flashcards={allFlashcards} />
@@ -133,10 +134,6 @@ export default function App() {
     function LatestVocab({ flashcards }: LatestVocabProps) {
         const totalEntries = flashcards.length;
         let lastMaxThreeEntries: FlashcardProp[] = [];
-
-        // if (!flashcards || !flashcards.length) {
-        //     throw new Error("flashcards is empty");
-        // }
 
         // array has min. 3 items, take last 3:
         if (totalEntries >= 3) {
