@@ -49,3 +49,8 @@ button {
     outline: none;
     /* border: none; */
 }
+
+img {
+    max-width: 100%;
+    display: block;
+}
