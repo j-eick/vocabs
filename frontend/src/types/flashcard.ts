@@ -7,4 +7,10 @@ export type FlashcardProp = {
     createdAt?: string;
     updatedAt?: string;
     stack: string;
+    learnStatus: "unsorted" | "dontKnow" | "notSure" | "know";
+    lastReviewed: Date;
+    nextReviewDate: Date;
+    reviewInterval: number;
+    easinessFactor: number;
+    repetitionCount: number;
 };
