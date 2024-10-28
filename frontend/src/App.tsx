@@ -45,23 +45,22 @@ export default function App() {
                     content={<p>New Stack was created</p>}
                 />
             )}
-            <Header className="h-22 px-3 grid grid-cols-10 bg-slate-400">
+            <Header className="h-22 px-3 pt-5 grid grid-cols-10 bg-slate-400">
                 <Profile
                     image="https://images6.alphacoders.com/130/1307179.jpeg"
                     name="Josh"
-                    className="mt-5 col-span-5"
+                    className=" col-span-5"
                 />
                 {ShowAddFlashcardButton && (
-                    <div className="mt-5 flex place-content-center col-span-5 ">
+                    <div className=" flex place-content-center col-span-5 ">
                         <button
                             onClick={e => {
                                 e.stopPropagation();
                                 setFlashcardFormModal(true);
                                 setAddFlashcardButton(false);
                             }}
-                            className={`px-3 flex items-center
-
-                                border-2 rounded-md bg-red-400`}
+                            className={`mb-3 px-3 flex items-center
+                                        border-2 rounded-md bg-red-400`}
                         >
                             Add Vocab
                         </button>
