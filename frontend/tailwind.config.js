@@ -32,6 +32,7 @@ export default {
             },
             animation: {
                 fadeIn: "fadeIn .25s ease-in-out",
+                "fadeIn-createVocabForm": "fadeIn .5s ease-in-out",
             },
         },
     },
