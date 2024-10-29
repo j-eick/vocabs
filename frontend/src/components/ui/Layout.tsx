@@ -6,10 +6,10 @@ export default function Layout() {
 
     return (
         <div className="h-screen flex flex-col">
-            <main className="flex-grow">
+            <main className="grow">
                 <Outlet />
             </main>
-            <footer className={`h-11 bg-slate-500`}>
+            <footer className={`h-11 bg-slate-500/80`}>
                 {pathname === "/" && <StartPage />}
                 {pathname === "/study" && <StudyPage />}
                 {pathname === "/allVocabs" && <AllVocabsPage />}

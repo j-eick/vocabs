@@ -14,7 +14,7 @@ type NavProps = {
 
 export default function Nav({ navItems, className }: NavProps) {
     return (
-        <ul className={twMerge(`h-11 w-full px-4 fixed bottom-0 flex justify-between bg-slate-300 ${className} `)}>
+        <ul className={twMerge(`h-11 w-full px-4 fixed bottom-0 flex justify-between ${className} `)}>
             {navItems.map(navItem => (
                 <li
                     key={navItem.name}
@@ -36,7 +36,7 @@ export default function Nav({ navItems, className }: NavProps) {
                             className="h-1/2"
                         >
                             {navItem.name}
-                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 h-1/2"></div>
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 h-1/2" />
                         </NavLink>
                     )}
                 </li>
