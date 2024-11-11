@@ -5,7 +5,8 @@ export default function Layout() {
     const { pathname } = useLocation();
 
     return (
-        <div className="h-screen flex flex-col">
+        //TODO: Footer breaks, if width > 745px
+        <div className="h-screen max-w-[720px] mx-auto my-0 flex flex-col border-2">
             <main className="grow">
                 <Outlet />
             </main>
